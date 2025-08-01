@@ -1,13 +1,34 @@
-import { Box, Divider, IconButton, Link, Stack, Typography} from "@mui/material";
-import React from "react";
+import {
+  Box,
+  Divider,
+  IconButton,
+  Link,
+  Stack,
+  Typography,
+} from "@mui/material";
+import React, {useState} from "react";
 
-import { Search, SearchIconWrapper, StyledInputBase } from "../../components/Search";
+import {
+  Search,
+  SearchIconWrapper,
+  StyledInputBase,
+} from "../../components/Search";
 import { MagnifyingGlass, Plus } from "phosphor-react";
-import {useTheme } from "@mui/material/styles";
-
+import { useTheme } from "@mui/material/styles";
+import { SimpleBarStyle } from "../../components/Scrollbar";
+import ChatElement from "../../components/ChatElement";
+import { ChatList } from "../../data";
+import CreateGroup from "../../sections/main/CreateGroup";
 
 const Group = () => {
-  const theme =useTheme();
+  const theme = useTheme();
+  const [openDialog, setOpenDialog] = useState(false);
+
+    const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  
   return (
     <>
       <Stack direction={"row"} sx={{ width: "100%" }}>
@@ -29,30 +50,57 @@ const Group = () => {
             </Stack>
 
             <Stack sx={{ width: "100%" }}>
-
               <Search>
                 <SearchIconWrapper>
                   <MagnifyingGlass color="#709CE6" />
                 </SearchIconWrapper>
-                <StyledInputBase 
-                placeholder="Search..."
-                inputProps={{"aria-label": "search"}}
+                <StyledInputBase
+                  placeholder="Search..."
+                  inputProps={{ "aria-label": "search" }}
                 />
               </Search>
             </Stack>
-            <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
-                <Typography variant="subtitle2" component={Link}>
-                    Create New Group
-                </Typography>
-                <IconButton>
-                  <Plus style={{color: theme.palette.primary.main}} />
-                </IconButton>
+            <Stack
+              direction={"row"}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+            >
+              <Typography variant="subtitle2" component={Link}>
+                Create New Group
+              </Typography>
+              <IconButton onClick={() =>{
+                setOpenDialog(true);
+              }} >
+                <Plus style={{ color: theme.palette.primary.main }} />
+              </IconButton>
             </Stack>
-            <Divider /> 
+            <Divider />
+            <Stack spacing={3} sx={{ flexGrow: 1, overflowY: "scroll", height: "100%" }}>
+              <SimpleBarStyle timeout={500} clickOnTrack={false}>
+                <Stack spacing={2.4}>
+                  <Typography variant="subtitle2" sx={{ color: "#676667" }}>
+                    Pinned
+                  </Typography>
+                  {/* Chat List */}
+                  {ChatList.filter((el) => el.pinned).map((el) => {
+                    return <ChatElement {...el} />;
+                  })}
+                  <Typography variant="subtitle2" sx={{ color: "#676667" }}>
+                    All Chats
+                  </Typography>
+                  {/* Chat List */}
+                  {ChatList.filter((el) => !el.pinned).map((el) => {
+                    return <ChatElement {...el} />;
+                  })}
+                </Stack>
+              </SimpleBarStyle>
+            </Stack>
           </Stack>
         </Box>
         {/* Right */}
+        {/* // TODO => Reuse conversation components */}
       </Stack>
+      {openDialog && <CreateGroup open={openDialog} handleClose={handleCloseDialog} />}
     </>
   );
 };

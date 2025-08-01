@@ -84,7 +84,7 @@ const LoginForm = () => {
     reset,
     setError,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
 
   const onSubmit = async (data) => {
