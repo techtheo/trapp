@@ -116,13 +116,13 @@ const Settings = () => {
               <Avatar
                 sx={{ width: 56, height: 56 }}
                 src={faker.image.avatar()}
-                alt={faker.name.fullName()}
+                alt={faker.person.fullName()}
               />
               <Stack spacing={0.5}>
                 <Typography variant="article">
-                  {faker.name.fullName()}
+                  {faker.person.fullName()}
                 </Typography>
-                <Typography variant="body2">{faker.random.words()}</Typography>
+                <Typography variant="body2">{faker.lorem.words()}</Typography>
               </Stack>
             </Stack>
             {/* List of options  */}

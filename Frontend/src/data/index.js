@@ -50,7 +50,7 @@ const ChatList = [
   {
     id: 0,
     img: faker.image.avatar(),
-    name: faker.name.firstName(),
+    name: faker.person.firstName(),
     msg: faker.music.songName(),
     time: "9:36",
     unread: 0,
@@ -60,7 +60,7 @@ const ChatList = [
   {
     id: 1,
     img: faker.image.avatar(),
-    name: faker.name.firstName(),
+    name: faker.person.firstName(),
     msg: faker.music.songName(),
     time: "12:02",
     unread: 2,
@@ -70,7 +70,7 @@ const ChatList = [
   {
     id: 2,
     img: faker.image.avatar(),
-    name: faker.name.firstName(),
+    name: faker.person.firstName(),
     msg: faker.music.songName(),
     time: "10:35",
     unread: 3,
@@ -80,7 +80,7 @@ const ChatList = [
   {
     id: 3,
     img: faker.image.avatar(),
-    name: faker.name.firstName(),
+    name: faker.person.firstName(),
     msg: faker.music.songName(),
     time: "04:00",
     unread: 0,
@@ -90,7 +90,7 @@ const ChatList = [
   {
     id: 4,
     img: faker.image.avatar(),
-    name: faker.name.firstName(),
+    name: faker.person.firstName(),
     msg: faker.music.songName(),
     time: "08:42",
     unread: 0,
@@ -100,7 +100,7 @@ const ChatList = [
   {
     id: 5,
     img: faker.image.avatar(),
-    name: faker.name.firstName(),
+    name: faker.person.firstName(),
     msg: faker.music.songName(),
     time: "08:42",
     unread: 0,
@@ -110,7 +110,7 @@ const ChatList = [
   {
     id: 6,
     img: faker.image.avatar(),
-    name: faker.name.firstName(),
+    name: faker.person.firstName(),
     msg: faker.music.songName(),
     time: "08:42",
     unread: 0,
@@ -120,7 +120,7 @@ const ChatList = [
   {
     id: 7,
     img: faker.image.avatar(),
-    name: faker.name.firstName(),
+    name: faker.person.firstName(),
     msg: faker.music.songName(),
     time: "08:42",
     unread: 0,
@@ -175,7 +175,7 @@ const Chat_History = [
     type: "msg",
     subtype: "img",
     message: "Here You Go",
-    img: faker.image.abstract(),
+    img: "https://picsum.photos/400/300?random=1",
     incoming: true,
     outgoing: false,
   },
@@ -196,7 +196,7 @@ const Chat_History = [
   {
     type: "msg",
     subtype: "link",
-    preview: faker.image.cats(),
+    preview: "https://picsum.photos/400/200?random=2",
     message: "Yep, I can also do that",
     incoming: true,
     outgoing: false,
@@ -232,57 +232,82 @@ const Message_options = [
   },
 ];
 
-const SHARED_LINKS =[
+const SHARED_LINKS = [
   {
     type: "msg",
     subtype: "link",
-    preview: faker.image.cats(),
+    preview: "https://picsum.photos/400/200?random=3",
     message: "Yep, I can also do that",
     incoming: true,
     outgoing: false,
-  }, 
+  },
   {
     type: "msg",
     subtype: "link",
-    preview: faker.image.cats(),
+    preview: "https://picsum.photos/400/200?random=4",
     message: "Yep, I can also do that",
     incoming: true,
     outgoing: false,
-  }, 
+  },
   {
     type: "msg",
     subtype: "link",
-    preview: faker.image.cats(),
+    preview: "https://picsum.photos/400/200?random=5",
     message: "Yep, I can also do that",
     incoming: true,
     outgoing: false,
-  }, 
+  },
   {
     type: "msg",
     subtype: "link",
-    preview: faker.image.cats(),
+    preview: "https://picsum.photos/400/200?random=6",
     message: "Yep, I can also do that",
     incoming: true,
     outgoing: false,
-  }, 
+  },
 ];
 
-const SHARED_DOCS =[
+const SHARED_DOCS = [
   {
     type: "msg",
     subtype: "doc",
-    message: "Yes sure, here you go.",
+    message: "Here's the project proposal document.",
+    fileName: "Project_Proposal_2024.pdf",
+    fileSize: "2.3 MB",
+    fileType: "PDF Document",
     incoming: true,
     outgoing: false,
   },
   {
     type: "msg",
     subtype: "doc",
-    message: "Yes sure, here you go.",
+    message: "Updated design mockups for review.",
+    fileName: "UI_Mockups_Final.sketch",
+    fileSize: "15.7 MB",
+    fileType: "Sketch File",
     incoming: true,
     outgoing: false,
   },
-  
+  {
+    type: "msg",
+    subtype: "doc",
+    message: "Meeting notes from yesterday.",
+    fileName: "Meeting_Notes_Dec21.docx",
+    fileSize: "456 KB",
+    fileType: "Word Document",
+    incoming: false,
+    outgoing: true,
+  },
+  {
+    type: "msg",
+    subtype: "doc",
+    message: "Financial report Q4.",
+    fileName: "Q4_Financial_Report.xlsx",
+    fileSize: "3.1 MB",
+    fileType: "Excel Spreadsheet",
+    incoming: true,
+    outgoing: false,
+  },
 ];
 
 export {

@@ -1,14 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+// SimpleBar CSS for cross-platform scrollbar styling
+import "simplebar-react/dist/simplebar.min.css";
+// Custom scrollbar styles for Windows compatibility
+import "./styles/scrollbar.css";
+
 // contexts
 import SettingsProvider from "./contexts/SettingsContext";
-import { store } from "./redux/store";
+import { store, persistor } from "./redux/store";
 import { Provider as ReduxProvider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
@@ -16,11 +22,13 @@ root.render(
   <React.StrictMode>
     <HelmetProvider>
       <ReduxProvider store={store}>
-      <SettingsProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </SettingsProvider>
+        <PersistGate loading={null} persistor={persistor}>
+          <SettingsProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </SettingsProvider>
+        </PersistGate>
       </ReduxProvider>
     </HelmetProvider>
   </React.StrictMode>

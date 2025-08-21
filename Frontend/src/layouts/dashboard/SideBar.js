@@ -9,7 +9,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import { useTheme, alpha } from "@mui/material/styles";
 import { Gear } from "phosphor-react";
 
 import { Nav_Buttons, Profile_Menu } from "../../data";
@@ -70,33 +70,95 @@ const SideBar = () => {
                 <Box
                   p={1}
                   sx={{
-                    backgroundColor: theme.palette.primary.main,
+                    background: `linear-gradient(135deg, ${alpha(
+                      theme.palette.primary.main,
+                      0.15
+                    )} 0%, ${alpha(theme.palette.primary.light, 0.08)} 100%)`,
                     borderRadius: 1.5,
+                    border: `2px solid ${alpha(
+                      theme.palette.primary.main,
+                      0.3
+                    )}`,
+                    boxShadow: `0 8px 32px ${alpha(
+                      theme.palette.primary.main,
+                      0.15
+                    )}, 0 0 0 1px ${alpha(theme.palette.primary.main, 0.1)}`,
+                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    position: "relative",
+                    "&:hover": {
+                      transform: "translateY(-2px)",
+                      boxShadow: `0 12px 40px ${alpha(
+                        theme.palette.primary.main,
+                        0.2
+                      )}, 0 0 0 1px ${alpha(theme.palette.primary.main, 0.15)}`,
+                      background: `linear-gradient(135deg, ${alpha(
+                        theme.palette.primary.main,
+                        0.2
+                      )} 0%, ${alpha(theme.palette.primary.light, 0.12)} 100%)`,
+                    },
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      background: `linear-gradient(90deg, ${alpha(
+                        theme.palette.primary.main,
+                        0.05
+                      )} 0%, transparent 100%)`,
+                      borderRadius: 1.5,
+                      pointerEvents: "none",
+                    },
                   }}
                   key={el.index}
                 >
                   <IconButton
-                    sx={{ width: "max-content", color: "gold" }}
+                    sx={{
+                      width: "max-content",
+                      color: theme.palette.primary.main,
+                      position: "relative",
+                      zIndex: 1,
+                    }}
                   >
                     {el.icon}
                   </IconButton>
                 </Box>
               ) : (
-                <IconButton
-                  onClick={() => {
-                    setSelected(el.index);
-                  }}
+                <Box
                   sx={{
-                    width: "max-content",
-                    color:
-                      theme.palette.mode === "light"
-                        ? "#000"
-                        : theme.palette.text.primary,
+                    borderRadius: 1.5,
+                    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    "&:hover": {
+                      transform: "translateY(-2px)",
+                      background:
+                        theme.palette.mode === "light"
+                          ? "#f8faff"
+                          : alpha(theme.palette.background.paper, 0.8),
+                      boxShadow:
+                        theme.palette.mode === "light"
+                          ? "0 8px 24px rgba(0, 0, 0, 0.08)"
+                          : "0 8px 24px rgba(0, 0, 0, 0.3)",
+                    },
                   }}
                   key={el.index}
                 >
-                  {el.icon}
-                </IconButton>
+                  <IconButton
+                    onClick={() => {
+                      setSelected(el.index);
+                    }}
+                    sx={{
+                      width: "max-content",
+                      color:
+                        theme.palette.mode === "light"
+                          ? "#000"
+                          : theme.palette.text.primary,
+                      transition: "all 0.3s ease",
+                    }}
+                  >
+                    {el.icon}
+                  </IconButton>
+                </Box>
               )
             )}
 
@@ -104,8 +166,71 @@ const SideBar = () => {
             <Box
               p={1}
               sx={{
-                backgroundColor: selected === 3 ? theme.palette.primary.main : 'transparent',
+                background:
+                  selected === 3
+                    ? `linear-gradient(135deg, ${alpha(
+                        theme.palette.primary.main,
+                        0.15
+                      )} 0%, ${alpha(theme.palette.primary.light, 0.08)} 100%)`
+                    : "transparent",
                 borderRadius: 1.5,
+                border:
+                  selected === 3
+                    ? `2px solid ${alpha(theme.palette.primary.main, 0.3)}`
+                    : "2px solid transparent",
+                boxShadow:
+                  selected === 3
+                    ? `0 8px 32px ${alpha(
+                        theme.palette.primary.main,
+                        0.15
+                      )}, 0 0 0 1px ${alpha(theme.palette.primary.main, 0.1)}`
+                    : "none",
+                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                position: "relative",
+                "&:hover": {
+                  transform: "translateY(-2px)",
+                  boxShadow:
+                    selected === 3
+                      ? `0 12px 40px ${alpha(
+                          theme.palette.primary.main,
+                          0.2
+                        )}, 0 0 0 1px ${alpha(
+                          theme.palette.primary.main,
+                          0.15
+                        )}`
+                      : theme.palette.mode === "light"
+                      ? "0 8px 24px rgba(0, 0, 0, 0.08)"
+                      : "0 8px 24px rgba(0, 0, 0, 0.3)",
+                  background:
+                    selected === 3
+                      ? `linear-gradient(135deg, ${alpha(
+                          theme.palette.primary.main,
+                          0.2
+                        )} 0%, ${alpha(
+                          theme.palette.primary.light,
+                          0.12
+                        )} 100%)`
+                      : theme.palette.mode === "light"
+                      ? "#f8faff"
+                      : alpha(theme.palette.background.paper, 0.8),
+                },
+                "&::before":
+                  selected === 3
+                    ? {
+                        content: '""',
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: `linear-gradient(90deg, ${alpha(
+                          theme.palette.primary.main,
+                          0.05
+                        )} 0%, transparent 100%)`,
+                        borderRadius: 1.5,
+                        pointerEvents: "none",
+                      }
+                    : {},
               }}
             >
               <IconButton
@@ -114,7 +239,15 @@ const SideBar = () => {
                 }}
                 sx={{
                   width: "max-content",
-                  color: "gold" ,
+                  color:
+                    selected === 3
+                      ? theme.palette.primary.main
+                      : theme.palette.mode === "light"
+                      ? "#000"
+                      : theme.palette.text.primary,
+                  position: "relative",
+                  zIndex: 1,
+                  transition: "all 0.3s ease",
                 }}
               >
                 <Gear />
