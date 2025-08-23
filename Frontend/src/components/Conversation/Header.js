@@ -42,6 +42,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import StyledBadge from "../StyledBadge";
 import { faker } from "@faker-js/faker";
+import { SimpleBarStyle } from "../Scrollbar";
 import {
   ToggleSidebar,
   updateSidebarType,
@@ -93,31 +94,179 @@ const DeleteMessagesDialog = ({
 
 // Generate dummy contacts for forwarding
 const generateForwardContacts = () => {
-  return Array.from({ length: 15 }, (_, index) => ({
-    id: index + 1,
-    name: faker.person.fullName(),
-    avatar: faker.image.avatar(),
-    lastSeen: faker.date.recent().toLocaleDateString(),
-    isOnline: Math.random() > 0.5,
-    phone: faker.phone.number(),
-  }));
+  try {
+    const contacts = Array.from({ length: 15 }, (_, index) => ({
+      id: index + 1,
+      name:
+        faker.person?.fullName() ||
+        faker.name?.fullName() ||
+        `Contact ${index + 1}`,
+      avatar: `https://i.pravatar.cc/150?img=${index + 1}`, // Use pravatar as backup
+      lastSeen:
+        faker.date?.recent()?.toLocaleDateString() ||
+        new Date().toLocaleDateString(),
+      isOnline: Math.random() > 0.5,
+      phone:
+        faker.phone?.number() ||
+        `+1 234 567 89${String(index).padStart(2, "0")}`,
+    }));
+    console.log("Generated contacts:", contacts); // Debug log
+    return contacts;
+  } catch (error) {
+    console.error("Error generating contacts with faker:", error);
+    // Fallback static contacts
+    return [
+      {
+        id: 1,
+        name: "Alice Johnson",
+        avatar: "https://i.pravatar.cc/150?img=1",
+        lastSeen: "2024-01-15",
+        isOnline: true,
+        phone: "+1 234 567 8901",
+      },
+      {
+        id: 2,
+        name: "Bob Smith",
+        avatar: "https://i.pravatar.cc/150?img=2",
+        lastSeen: "2024-01-14",
+        isOnline: false,
+        phone: "+1 234 567 8902",
+      },
+      {
+        id: 3,
+        name: "Carol Davis",
+        avatar: "https://i.pravatar.cc/150?img=3",
+        lastSeen: "2024-01-16",
+        isOnline: true,
+        phone: "+1 234 567 8903",
+      },
+      {
+        id: 4,
+        name: "David Wilson",
+        avatar: "https://i.pravatar.cc/150?img=4",
+        lastSeen: "2024-01-13",
+        isOnline: false,
+        phone: "+1 234 567 8904",
+      },
+      {
+        id: 5,
+        name: "Emma Brown",
+        avatar: "https://i.pravatar.cc/150?img=5",
+        lastSeen: "2024-01-17",
+        isOnline: true,
+        phone: "+1 234 567 8905",
+      },
+      {
+        id: 6,
+        name: "Frank Miller",
+        avatar: "https://i.pravatar.cc/150?img=6",
+        lastSeen: "2024-01-12",
+        isOnline: false,
+        phone: "+1 234 567 8906",
+      },
+      {
+        id: 7,
+        name: "Grace Lee",
+        avatar: "https://i.pravatar.cc/150?img=7",
+        lastSeen: "2024-01-18",
+        isOnline: true,
+        phone: "+1 234 567 8907",
+      },
+      {
+        id: 8,
+        name: "Henry Taylor",
+        avatar: "https://i.pravatar.cc/150?img=8",
+        lastSeen: "2024-01-11",
+        isOnline: false,
+        phone: "+1 234 567 8908",
+      },
+      {
+        id: 9,
+        name: "Ivy Chen",
+        avatar: "https://i.pravatar.cc/150?img=9",
+        lastSeen: "2024-01-19",
+        isOnline: true,
+        phone: "+1 234 567 8909",
+      },
+      {
+        id: 10,
+        name: "Jack Anderson",
+        avatar: "https://i.pravatar.cc/150?img=10",
+        lastSeen: "2024-01-10",
+        isOnline: false,
+        phone: "+1 234 567 8910",
+      },
+      {
+        id: 11,
+        name: "Kate Martinez",
+        avatar: "https://i.pravatar.cc/150?img=11",
+        lastSeen: "2024-01-20",
+        isOnline: true,
+        phone: "+1 234 567 8911",
+      },
+      {
+        id: 12,
+        name: "Liam Garcia",
+        avatar: "https://i.pravatar.cc/150?img=12",
+        lastSeen: "2024-01-09",
+        isOnline: false,
+        phone: "+1 234 567 8912",
+      },
+      {
+        id: 13,
+        name: "Mia Rodriguez",
+        avatar: "https://i.pravatar.cc/150?img=13",
+        lastSeen: "2024-01-21",
+        isOnline: true,
+        phone: "+1 234 567 8913",
+      },
+      {
+        id: 14,
+        name: "Noah Thompson",
+        avatar: "https://i.pravatar.cc/150?img=14",
+        lastSeen: "2024-01-08",
+        isOnline: false,
+        phone: "+1 234 567 8914",
+      },
+      {
+        id: 15,
+        name: "Olivia White",
+        avatar: "https://i.pravatar.cc/150?img=15",
+        lastSeen: "2024-01-22",
+        isOnline: true,
+        phone: "+1 234 567 8915",
+      },
+    ];
+  }
 };
 
-const ForwardMessagesDialog = ({ open, handleClose, selectedCount, onForward }) => {
+const ForwardMessagesDialog = ({
+  open,
+  handleClose,
+  selectedCount,
+  onForward,
+}) => {
   const theme = useTheme();
   const [selectedContacts, setSelectedContacts] = React.useState([]);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [contacts] = React.useState(generateForwardContacts());
+  const [contacts] = React.useState(() => {
+    const generatedContacts = generateForwardContacts();
+    console.log("Contacts in dialog:", generatedContacts);
+    return generatedContacts;
+  });
 
-  const filteredContacts = contacts.filter(contact =>
-    contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    contact.phone.includes(searchQuery)
+  const filteredContacts = contacts.filter(
+    (contact) =>
+      contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      contact.phone.includes(searchQuery)
   );
 
+  console.log("Filtered contacts:", filteredContacts);
+
   const handleContactToggle = (contact) => {
-    const isSelected = selectedContacts.find(c => c.id === contact.id);
+    const isSelected = selectedContacts.find((c) => c.id === contact.id);
     if (isSelected) {
-      setSelectedContacts(selectedContacts.filter(c => c.id !== contact.id));
+      setSelectedContacts(selectedContacts.filter((c) => c.id !== contact.id));
     } else {
       setSelectedContacts([...selectedContacts, contact]);
     }
@@ -171,9 +320,23 @@ const ForwardMessagesDialog = ({ open, handleClose, selectedCount, onForward }) 
         </Stack>
       </DialogTitle>
 
-      <DialogContent sx={{ p: 0 }}>
+      <DialogContent
+        sx={{
+          p: 0,
+          display: "flex",
+          flexDirection: "column",
+          height: "100%",
+          overflow: "hidden",
+        }}
+      >
         {/* Search Bar */}
-        <Box p={2} sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}>
+        <Box
+          p={2}
+          sx={{
+            borderBottom: `1px solid ${theme.palette.divider}`,
+            flexShrink: 0,
+          }}
+        >
           <TextField
             fullWidth
             placeholder="Search contacts..."
@@ -197,7 +360,13 @@ const ForwardMessagesDialog = ({ open, handleClose, selectedCount, onForward }) 
 
         {/* Selected Contacts Chips */}
         {selectedContacts.length > 0 && (
-          <Box p={2} sx={{ borderBottom: `1px solid ${theme.palette.divider}` }}>
+          <Box
+            p={2}
+            sx={{
+              borderBottom: `1px solid ${theme.palette.divider}`,
+              flexShrink: 0,
+            }}
+          >
             <Typography variant="subtitle2" color="primary" gutterBottom>
               Selected ({selectedContacts.length})
             </Typography>
@@ -205,7 +374,12 @@ const ForwardMessagesDialog = ({ open, handleClose, selectedCount, onForward }) 
               {selectedContacts.map((contact) => (
                 <Chip
                   key={contact.id}
-                  avatar={<Avatar src={contact.avatar} sx={{ width: 24, height: 24 }} />}
+                  avatar={
+                    <Avatar
+                      src={contact.avatar}
+                      sx={{ width: 24, height: 24 }}
+                    />
+                  }
                   label={contact.name}
                   onDelete={() => handleContactToggle(contact)}
                   color="primary"
@@ -218,64 +392,82 @@ const ForwardMessagesDialog = ({ open, handleClose, selectedCount, onForward }) 
         )}
 
         {/* Contacts List */}
-        <List sx={{ maxHeight: "40vh", overflow: "auto" }}>
-          {filteredContacts.map((contact) => {
-            const isSelected = selectedContacts.find(c => c.id === contact.id);
-            return (
-              <ListItem key={contact.id} disablePadding>
-                <ListItemButton
-                  onClick={() => handleContactToggle(contact)}
-                  sx={{
-                    py: 1.5,
-                    px: 2,
-                    "&:hover": {
-                      backgroundColor: theme.palette.action.hover,
-                    },
-                    backgroundColor: isSelected ? theme.palette.action.selected : "transparent",
-                  }}
-                >
-                  <Checkbox
-                    checked={!!isSelected}
-                    sx={{ mr: 1 }}
-                    color="primary"
-                  />
-                  <ListItemAvatar>
-                    <Avatar
-                      src={contact.avatar}
-                      sx={{
-                        border: isSelected ? `2px solid ${theme.palette.primary.main}` : "none",
-                      }}
+        <Box
+          sx={{
+            flexGrow: 1,
+            minHeight: 0, // Important for flex child to shrink
+            overflow: "auto", // Use native scrolling for now
+            maxHeight: "400px", // Add explicit max height
+          }}
+        >
+          <List sx={{ padding: 0 }}>
+            {filteredContacts.map((contact) => {
+              const isSelected = selectedContacts.find(
+                (c) => c.id === contact.id
+              );
+              return (
+                <ListItem key={contact.id} disablePadding>
+                  <ListItemButton
+                    onClick={() => handleContactToggle(contact)}
+                    sx={{
+                      py: 1.5,
+                      px: 2,
+                      "&:hover": {
+                        backgroundColor: theme.palette.action.hover,
+                      },
+                      backgroundColor: isSelected
+                        ? theme.palette.action.selected
+                        : "transparent",
+                    }}
+                  >
+                    <Checkbox
+                      checked={!!isSelected}
+                      sx={{ mr: 1 }}
+                      color="primary"
                     />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <Typography variant="subtitle2" fontWeight={isSelected ? "bold" : "normal"}>
-                        {contact.name}
-                      </Typography>
-                    }
-                    secondary={
-                      <Stack direction="row" alignItems="center" spacing={1}>
-                        <Typography variant="caption" color="text.secondary">
-                          {contact.phone}
+                    <ListItemAvatar>
+                      <Avatar
+                        src={contact.avatar}
+                        sx={{
+                          border: isSelected
+                            ? `2px solid ${theme.palette.primary.main}`
+                            : "none",
+                        }}
+                      />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <Typography
+                          variant="subtitle2"
+                          fontWeight={isSelected ? "bold" : "normal"}
+                        >
+                          {contact.name}
                         </Typography>
-                        {contact.isOnline && (
-                          <Box
-                            sx={{
-                              width: 8,
-                              height: 8,
-                              borderRadius: "50%",
-                              backgroundColor: "#44b700",
-                            }}
-                          />
-                        )}
-                      </Stack>
-                    }
-                  />
-                </ListItemButton>
-              </ListItem>
-            );
-          })}
-        </List>
+                      }
+                      secondary={
+                        <Stack direction="row" alignItems="center" spacing={1}>
+                          <Typography variant="caption" color="text.secondary">
+                            {contact.phone}
+                          </Typography>
+                          {contact.isOnline && (
+                            <Box
+                              sx={{
+                                width: 8,
+                                height: 8,
+                                borderRadius: "50%",
+                                backgroundColor: "#44b700",
+                              }}
+                            />
+                          )}
+                        </Stack>
+                      }
+                    />
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+          </List>
+        </Box>
       </DialogContent>
 
       <DialogActions
@@ -493,6 +685,7 @@ const Header = () => {
           </IconButton>
           <IconButton
             disabled={messageSelection.selectedMessages.length === 0}
+            onClick={handleOpenForwardDialog}
             sx={{
               color:
                 messageSelection.selectedMessages.length === 0
@@ -529,6 +722,12 @@ const Header = () => {
           handleClose={handleCloseDeleteDialog}
           selectedCount={messageSelection.selectedMessages.length}
           onConfirm={handleConfirmDelete}
+        />
+        <ForwardMessagesDialog
+          open={openForwardDialog}
+          handleClose={handleCloseForwardDialog}
+          selectedCount={messageSelection.selectedMessages.length}
+          onForward={handleForwardMessages}
         />
       </>
     );

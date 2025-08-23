@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import {
   Avatar,
@@ -20,8 +21,36 @@ import Logo from "../../assets/Images/trapp.png";
 
 const SideBar = () => {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [selected, setSelected] = useState(0);
   const { onToggleMode } = useSettings();
+
+  // Function to get selected index based on current path
+  const getSelectedFromPath = (pathname) => {
+    switch (pathname) {
+      case "/app":
+        return 0; // Chats
+      case "/group":
+        return 1; // Groups
+      case "/call":
+        return 2; // Call logs
+      case "/settings":
+        return 3; // Settings
+      case "/profile":
+        return null; // Profile doesn't have a sidebar icon, so no selection
+      default:
+        return 0; // Default to chats for unknown paths
+    }
+  };
+
+  // Update selected state when location changes
+  useEffect(() => {
+    const selectedIndex = getSelectedFromPath(location.pathname);
+    if (selectedIndex !== null) {
+      setSelected(selectedIndex);
+    }
+  }, [location.pathname]);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -30,6 +59,50 @@ const SideBar = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleMenuItemClick = (title) => {
+    handleClose();
+    
+    switch (title) {
+      case "Profile":
+        navigate("/profile");
+        break;
+      case "Settings":
+        navigate("/settings");
+        break;
+      case "Logout":
+        // Handle logout functionality here
+        console.log("Logout clicked");
+        // You can add logout logic here, e.g.:
+        // dispatch(logout());
+        // navigate("/auth/login");
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleNavButtonClick = (index) => {
+    // Don't manually set selected - let useEffect handle it based on URL
+    switch (index) {
+      case 0:
+        navigate("/app"); // Chats
+        break;
+      case 1:
+        navigate("/group"); // Groups
+        break;
+      case 2:
+        navigate("/call"); // Call logs
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleSettingsClick = () => {
+    // Don't manually set selected - let useEffect handle it based on URL
+    navigate("/settings");
   };
 
   return (
@@ -144,9 +217,7 @@ const SideBar = () => {
                   key={el.index}
                 >
                   <IconButton
-                    onClick={() => {
-                      setSelected(el.index);
-                    }}
+                    onClick={() => handleNavButtonClick(el.index)}
                     sx={{
                       width: "max-content",
                       color:
@@ -234,9 +305,7 @@ const SideBar = () => {
               }}
             >
               <IconButton
-                onClick={() => {
-                  setSelected(3);
-                }}
+                onClick={handleSettingsClick}
                 sx={{
                   width: "max-content",
                   color:
@@ -291,7 +360,18 @@ const SideBar = () => {
           >
             <Stack spacing={1} px={1}>
               {Profile_Menu.map((el) => (
-                <MenuItem onClick={handleClose} key={el.title}>
+                <MenuItem 
+                  onClick={() => handleMenuItemClick(el.title)} 
+                  key={el.title}
+                  sx={{
+                    borderRadius: 1,
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      backgroundColor: alpha(theme.palette.primary.main, 0.08),
+                      transform: "translateX(4px)",
+                    },
+                  }}
+                >
                   <Stack
                     sx={{ width: 100 }}
                     direction="row"

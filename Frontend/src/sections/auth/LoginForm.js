@@ -12,9 +12,12 @@ import {
   Link,
   Stack,
   CircularProgress,
+  Box,
+  Typography,
 } from "@mui/material";
+import { useTheme, styled, alpha } from "@mui/material/styles";
 import { RHFTextField } from "../../components/hook-form";
-import { Eye, EyeSlash } from "phosphor-react";
+import { Eye, EyeSlash, Envelope, Lock, CheckCircle } from "phosphor-react";
 
 const SlideInAlert = ({ severity, message, onClose }) => {
   const [isVisible, setIsVisible] = useState(true);
@@ -54,7 +57,119 @@ const SlideInAlert = ({ severity, message, onClose }) => {
   );
 };
 
+// Styled components for fancy form
+const FancyTextField = styled(RHFTextField)(({ theme }) => ({
+  "& .MuiOutlinedInput-root": {
+    borderRadius: 16,
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+    background: theme.palette.mode === "light" 
+      ? alpha(theme.palette.background.paper, 0.8)
+      : alpha(theme.palette.background.paper, 0.4),
+    backdropFilter: "blur(10px)",
+    
+    "&:hover": {
+      transform: "translateY(-2px)",
+      boxShadow: theme.palette.mode === "light"
+        ? "0 8px 24px rgba(0, 0, 0, 0.08)"
+        : "0 8px 24px rgba(0, 0, 0, 0.3)",
+    },
+    
+    "&.Mui-focused": {
+      transform: "translateY(-2px)",
+      boxShadow: `0 8px 32px ${alpha(theme.palette.primary.main, 0.15)}`,
+      "& .MuiOutlinedInput-notchedOutline": {
+        borderColor: theme.palette.primary.main,
+        borderWidth: 2,
+      },
+    },
+  },
+  
+  "& .MuiInputLabel-root": {
+    fontWeight: 500,
+    "&.Mui-focused": {
+      color: theme.palette.primary.main,
+    },
+  },
+}));
+
+const FancyButton = styled(Button)(({ theme }) => ({
+  borderRadius: 16,
+  padding: "16px 24px",
+  fontSize: "1rem",
+  fontWeight: 600,
+  textTransform: "none",
+  background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+  boxShadow: `0 8px 24px ${alpha(theme.palette.primary.main, 0.3)}`,
+  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+  position: "relative",
+  overflow: "hidden",
+  
+  "&:hover": {
+    transform: "translateY(-2px)",
+    boxShadow: `0 12px 32px ${alpha(theme.palette.primary.main, 0.4)}`,
+    background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+  },
+  
+  "&:active": {
+    transform: "translateY(0px)",
+  },
+  
+  "&:disabled": {
+    background: alpha(theme.palette.action.disabled, 0.12),
+    color: theme.palette.action.disabled,
+    boxShadow: "none",
+    transform: "none",
+  },
+  
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    top: 0,
+    left: "-100%",
+    width: "100%",
+    height: "100%",
+    background: `linear-gradient(90deg, transparent, ${alpha(
+      theme.palette.common.white,
+      0.2
+    )}, transparent)`,
+    transition: "left 0.5s",
+  },
+  
+  "&:hover::before": {
+    left: "100%",
+  },
+}));
+
+const FancyLink = styled(Link)(({ theme }) => ({
+  color: theme.palette.primary.main,
+  textDecoration: "none",
+  fontWeight: 500,
+  position: "relative",
+  transition: "all 0.3s ease",
+  
+  "&:hover": {
+    color: theme.palette.primary.dark,
+    transform: "translateY(-1px)",
+  },
+  
+  "&::after": {
+    content: '""',
+    position: "absolute",
+    bottom: -2,
+    left: 0,
+    width: 0,
+    height: 2,
+    background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+    transition: "width 0.3s ease",
+  },
+  
+  "&:hover::after": {
+    width: "100%",
+  },
+}));
+
 const LoginForm = () => {
+  const theme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -123,67 +238,74 @@ const LoginForm = () => {
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={3}>
+      <Stack spacing={4}>
         {!!errors.afterSubmit && (
           <SlideInAlert severity="error" message={errors.afterSubmit.message} onClose={handleErrorAlertClose} />
         )}
 
-        <RHFTextField name="email" label="Email address" />
+        <FancyTextField 
+          name="email" 
+          label="Email address"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Envelope size={20} color={theme.palette.text.secondary} />
+              </InputAdornment>
+            ),
+          }}
+        />
 
-        <RHFTextField
+        <FancyTextField
           name="password"
           label="Password"
           type={showPassword ? "text" : "password"}
           InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Lock size={20} color={theme.palette.text.secondary} />
+              </InputAdornment>
+            ),
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
-                  onClick={() => {
-                    setShowPassword(!showPassword);
+                  onClick={() => setShowPassword(!showPassword)}
+                  sx={{
+                    color: theme.palette.text.secondary,
+                    "&:hover": {
+                      color: theme.palette.primary.main,
+                      background: alpha(theme.palette.primary.main, 0.08),
+                    },
                   }}
                 >
-                  {showPassword ? <Eye /> : <EyeSlash />}
+                  {showPassword ? <Eye size={20} /> : <EyeSlash size={20} />}
                 </IconButton>
               </InputAdornment>
             ),
           }}
         />
-      </Stack>
-      <Stack alignItems="flex-end" sx={{ my: 2 }}>
-        <Link
-          component={RouterLink}
-          to="/auth/reset-password"
-          variant="body2"
-          color="inherit"
-          underline="always"
+
+        <Stack alignItems="flex-end" sx={{ mt: 1 }}>
+          <FancyLink
+            component={RouterLink}
+            to="/auth/reset-password"
+            variant="body2"
+          >
+            Forgot Password?
+          </FancyLink>
+        </Stack>
+
+        <FancyButton
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+          disabled={isLoading}
+          startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <CheckCircle size={20} />}
         >
-          Forgot Password?
-        </Link>
+          {isLoading ? "Signing in..." : "Sign In"}
+        </FancyButton>
       </Stack>
-      <Button
-        fullWidth
-        color="inherit"
-        size="large"
-        type="submit"
-        variant="contained"
-        disabled={isLoading}
-        sx={{
-          bgcolor: "text.primary",
-          color: (theme) =>
-            theme.palette.mode === "light" ? "common.white" : "grey.800",
-          "&:hover": {
-            bgcolor: "text.primary",
-            color: (theme) =>
-              theme.palette.mode === "light" ? "common.white" : "grey.800",
-          },
-        }}
-      >
-        {isLoading ? (
-          <CircularProgress size={24} color="inherit" />
-        ) : (
-          "Login"
-        )}
-      </Button>
+
       {successAlert && (
         <SlideInAlert
           severity="success"
