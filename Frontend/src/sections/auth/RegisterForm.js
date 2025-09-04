@@ -10,6 +10,7 @@ import {
   InputAdornment,
   Stack,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { RHFTextField } from "../../components/hook-form";
 import { Eye, EyeSlash } from "phosphor-react";
 
@@ -51,6 +52,7 @@ const SlideInAlert = ({ severity, message, onClose }) => {
 }; 
 
 const RegisterForm = () => {
+  const theme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
@@ -206,19 +208,72 @@ const RegisterForm = () => {
           size="large"
           type="submit"
           variant="contained"
-          disabled={isSubmitting}            
+          disabled={isSubmitting}
           sx={{
-            bgcolor: "text.primary",
-            color: (theme) =>
-              theme.palette.mode === "light" ? "common.white" : "grey.800",
+            borderRadius: 3,
+            padding: "16px 24px",
+            fontSize: "1rem",
+            fontWeight: 600,
+            textTransform: "none",
+            position: "relative",
+            overflow: "hidden",
+            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+            boxShadow: `0 8px 24px ${theme.palette.primary.main}40`,
+            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+            
             "&:hover": {
-              bgcolor: "text.primary",
-              color: (theme) =>
-                theme.palette.mode === "light" ? "common.white" : "grey.800",
+              transform: "translateY(-2px)",
+              boxShadow: `0 12px 32px ${theme.palette.primary.main}60`,
+              background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+            },
+            
+            "&:active": {
+              transform: "translateY(0px)",
+              boxShadow: `0 4px 16px ${theme.palette.primary.main}40`,
+            },
+            
+            "&:disabled": {
+              background: theme.palette.action.disabledBackground,
+              color: theme.palette.action.disabled,
+              boxShadow: "none",
+              transform: "none",
+            },
+            
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              top: 0,
+              left: "-100%",
+              width: "100%",
+              height: "100%",
+              background: `linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)`,
+              transition: "left 0.6s",
+            },
+            
+            "&:hover::before": {
+              left: "100%",
+            },
+            
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              width: 0,
+              height: 0,
+              borderRadius: "50%",
+              background: "rgba(255, 255, 255, 0.1)",
+              transform: "translate(-50%, -50%)",
+              transition: "width 0.6s, height 0.6s",
+            },
+            
+            "&:active::after": {
+              width: "300px",
+              height: "300px",
             },
           }}
         >
-          {isSubmitting ? "Submitting..." : "Create Account"}
+          {isSubmitting ? "Creating Account..." : "Create Account"}
         </Button>
       </Stack>
     </FormProvider>

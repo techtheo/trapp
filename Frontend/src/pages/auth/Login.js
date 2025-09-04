@@ -5,6 +5,7 @@ import React from "react";
 import AuthSocial from "../../sections/auth/AuthSocial";
 import LoginForm from "../../sections/auth/LoginForm";
 import { ChatCircleDots, Sparkle } from "phosphor-react";
+import Logo from "../../assets/Images/trapp.png";
 
 // Styled components for fancy design
 const AuthCard = styled(Card)(({ theme }) => ({
@@ -92,39 +93,47 @@ const Login = () => {
           alignItems: "center",
           justifyContent: "center",
           minHeight: "100vh",
-          p: 3,
+          p: 2,
         }}
       >
         <AuthCard sx={{ width: "100%", maxWidth: 480 }}>
-          <CardContent sx={{ p: 5 }}>
-            <Stack spacing={4} sx={{ position: "relative" }}>
+          <CardContent sx={{ p: 2.5 }}>
+            <Stack spacing={2} sx={{ position: "relative" }}>
               {/* Header Section */}
-              <Box sx={{ textAlign: "center", mb: 2 }}>
+              <Box sx={{ textAlign: "center", mb: 0 }}>
                 <Box
                   sx={{
                     display: "inline-flex",
-                    p: 2,
+                    p: 0.5,
                     borderRadius: 3,
                     background: `linear-gradient(135deg, ${alpha(
                       theme.palette.primary.main,
                       0.1
                     )} 0%, ${alpha(theme.palette.primary.light, 0.05)} 100%)`,
-                    mb: 3,
+                    mb: 1,
                   }}
                 >
-                  <ChatCircleDots size={40} color={theme.palette.primary.main} />
+                  <img 
+                    src={Logo} 
+                    alt="Trapp Logo" 
+                    style={{ 
+                      height: 70, 
+                      width: 70,
+                      borderRadius: 8
+                    }} 
+                  />
                 </Box>
                 
-                <GradientText variant="h3" sx={{ mb: 1 }}>
+                <GradientText variant="h4" sx={{ mb: 0.5 }}>
                   Welcome Back
                 </GradientText>
                 
                 <Typography 
-                  variant="h6" 
+                  variant="body1" 
                   sx={{ 
                     fontWeight: 400,
                     color: "text.secondary",
-                    mb: 3,
+                    mb: 1,
                   }}
                 >
                   Sign in to continue to Trapp
@@ -169,7 +178,7 @@ const Login = () => {
               <LoginForm />
 
               {/* Divider */}
-              <Box sx={{ position: "relative", my: 3 }}>
+              <Box sx={{ position: "relative", my: 1 }}>
                 <Box
                   sx={{
                     position: "absolute",

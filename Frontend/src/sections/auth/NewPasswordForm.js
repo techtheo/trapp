@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import { Link as RouterLink } from "react-router-dom";
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -9,10 +8,9 @@ import {
   Button,
   IconButton,
   InputAdornment,
-  // Link,
   Stack,
-  CircularProgress,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { RHFTextField } from "../../components/hook-form";
 import { Eye, EyeSlash } from "phosphor-react";
 
@@ -55,17 +53,18 @@ const SlideInAlert = ({ severity, message, onClose }) => {
 };
 
 const NewPasswordForm = () => {
+  const theme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [passwordSuccess, setPasswordSuccess] = useState(false);
 
   const NewPasswordSchema = Yup.object().shape({
     newPassword: Yup.string()
       .required("Password is required")
       .matches(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#£])[A-Za-z\d@$!%*?&#£]{8,}$/,
-        "Password should contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long"
+        "Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long"
       ),
-      confirmPassword: Yup.string()
+    confirmPassword: Yup.string()
       .required("Password must match")
       .oneOf([Yup.ref("newPassword"), null], "Passwords must match"),
   });
@@ -84,62 +83,70 @@ const NewPasswordForm = () => {
     reset,
     setError,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = methods;
 
   const onSubmit = async (data) => {
     try {
-      setIsLoading(true);
+      // Check if passwords match
+      if (data.newPassword !== data.confirmPassword) {
+        setError("confirmPassword", {
+          type: "manual",
+          message: "Passwords do not match",
+        });
+        return;
+      }
 
-      // Simulate validation errors (remove this block in real implementation)
-      // if (data.email !== "demo@trapp.com" || data.password !== "Password123!") {
-      //   throw new Error("Invalid credentials");
-      // }
+      // Clear password field errors
+      methods.clearErrors("newPassword");
 
       // Submit data to backend (placeholder)
       console.log(data);
 
-      // Simulate successful login
+      // Simulate successful password reset
       reset();
-      setSuccessAlert(true);
+      setPasswordSuccess(true);
     } catch (error) {
       console.log(error);
       reset();
       setError("afterSubmit", {
-        message: error.message || "Failed to set new password",
+        ...error,
+        message: error.message,
       });
-      setErrorAlert(true);
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const [successAlert, setSuccessAlert] = useState(false);
-  const [errorAlert, setErrorAlert] = useState(false);
-
-  const handleErrorAlertClose = () => {
-    setErrorAlert(false);
+  const handleAlertClose = () => {
+    setPasswordSuccess(false);
   };
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        {!!errors.afterSubmit && (
-          <SlideInAlert severity="error" message={errors.afterSubmit.message} onClose={handleErrorAlertClose} />
+        {passwordSuccess && (
+          <SlideInAlert
+            severity="success"
+            message="Password reset successfully 😎✅!"
+            onClose={handleAlertClose}
+          />
         )}
 
+        {!!errors.afterSubmit && (
+          <Alert severity="error">{errors.afterSubmit.message}</Alert>
+        )}
 
         <RHFTextField
           name="newPassword"
           label="New Password"
           type={showPassword ? "text" : "password"}
+          error={!!errors.newPassword}
+          helperText={errors.newPassword?.message}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
-                  onClick={() => {
-                    setShowPassword(!showPassword);
-                  }}
+                  onClick={() => setShowPassword(!showPassword)}
+                  edge="end"
                 >
                   {showPassword ? <Eye /> : <EyeSlash />}
                 </IconButton>
@@ -147,16 +154,20 @@ const NewPasswordForm = () => {
             ),
           }}
         />
-                <RHFTextField
+
+        <RHFTextField
           name="confirmPassword"
-          label="Comfirm Password"
+          label="Confirm Password"
           type={showPassword ? "text" : "password"}
+          error={!!errors.confirmPassword}
+          helperText={errors.confirmPassword?.message}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
                   onClick={() => {
                     setShowPassword(!showPassword);
+                    methods.setValue("confirmPassword", ""); // Clear confirmPassword field
                   }}
                 >
                   {showPassword ? <Eye /> : <EyeSlash />}
@@ -166,48 +177,80 @@ const NewPasswordForm = () => {
           }}
         />
 
-<Button
-        fullWidth
-        color="inherit"
-        size="large"
-        type="submit"
-        variant="contained"
-        disabled={isLoading}
-        sx={{
-          bgcolor: "text.primary",
-          color: (theme) =>
-            theme.palette.mode === "light" ? "common.white" : "grey.800",
-          "&:hover": {
-            bgcolor: "text.primary",
-            color: (theme) =>
-              theme.palette.mode === "light" ? "common.white" : "grey.800",
-          },
-        }}
-      >
-        {isLoading ? (
-          <CircularProgress size={24} color="inherit" />
-        ) : (
-          "Set new Password"
-        )}
-      </Button>
-      
+        <Button
+          fullWidth
+          color="inherit"
+          size="large"
+          type="submit"
+          variant="contained"
+          disabled={isSubmitting}
+          sx={{
+            borderRadius: 3,
+            padding: "16px 24px",
+            fontSize: "1rem",
+            fontWeight: 600,
+            textTransform: "none",
+            position: "relative",
+            overflow: "hidden",
+            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`,
+            boxShadow: `0 8px 24px ${theme.palette.primary.main}40`,
+            transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+            
+            "&:hover": {
+              transform: "translateY(-2px)",
+              boxShadow: `0 12px 32px ${theme.palette.primary.main}60`,
+              background: `linear-gradient(135deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+            },
+            
+            "&:active": {
+              transform: "translateY(0px)",
+              boxShadow: `0 4px 16px ${theme.palette.primary.main}40`,
+            },
+            
+            "&:disabled": {
+              background: theme.palette.action.disabledBackground,
+              color: theme.palette.action.disabled,
+              boxShadow: "none",
+              transform: "none",
+            },
+            
+            "&::before": {
+              content: '""',
+              position: "absolute",
+              top: 0,
+              left: "-100%",
+              width: "100%",
+              height: "100%",
+              background: `linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent)`,
+              transition: "left 0.6s",
+            },
+            
+            "&:hover::before": {
+              left: "100%",
+            },
+            
+            "&::after": {
+              content: '""',
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              width: 0,
+              height: 0,
+              borderRadius: "50%",
+              background: "rgba(255, 255, 255, 0.1)",
+              transform: "translate(-50%, -50%)",
+              transition: "width 0.6s, height 0.6s",
+            },
+            
+            "&:active::after": {
+              width: "300px",
+              height: "300px",
+            },
+          }}
+        >
+          {isSubmitting ? "Setting Password..." : "Set New Password"}
+        </Button>
       </Stack>
-      
-
-      {successAlert && (
-        <SlideInAlert
-          severity="success"
-          message="New password set  successfully 😎🎉"
-          onClose={() => setSuccessAlert(false)}
-        />
-      )}
-      {errorAlert && (
-        <SlideInAlert
-          severity="error"
-          message="couldn't set new password . Please try again."
-          onClose={handleErrorAlertClose}
-        />
-      )}
     </FormProvider>
   );
 };

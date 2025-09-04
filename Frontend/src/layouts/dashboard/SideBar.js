@@ -76,7 +76,7 @@ const SideBar = () => {
         console.log("Logout clicked");
         // You can add logout logic here, e.g.:
         // dispatch(logout());
-        // navigate("/auth/login");
+        navigate("/auth/login");
         break;
       default:
         break;

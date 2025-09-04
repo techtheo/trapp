@@ -134,6 +134,8 @@ const Call = () => {
             </Stack>
           </Stack>
         </Box>
+        {/*  */}
+        {/*  */}
         {/* Right */}
         {/* // TODO => Reuse conversation components */}
       </Stack>
@@ -143,3 +145,4 @@ const Call = () => {
 };
 
 export default Call;
+
