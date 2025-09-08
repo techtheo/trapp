@@ -34,8 +34,18 @@ const sendSGMail = async ({
 };
 
 exports.sendEmail = async (args) => {
-  if (!process.env.NODE_ENV === "development") {
-    return Promise.resolve();
+  // In development mode, simulate email sending instead of actually sending
+  if (process.env.NODE_ENV === "development") {
+    console.log("📧 Email simulation (Development Mode):", {
+      to: args.to,
+      subject: args.subject,
+      from: "realidolo98@gmail.com"
+    });
+    return Promise.resolve({
+      success: true,
+      messageId: "dev-simulation-" + Date.now(),
+      statusCode: 202
+    });
   } else {
     return sendSGMail(args);
   }

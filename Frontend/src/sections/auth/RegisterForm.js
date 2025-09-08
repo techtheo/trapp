@@ -13,48 +13,14 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { RHFTextField } from "../../components/hook-form";
 import { Eye, EyeSlash } from "phosphor-react";
-
-const SlideInAlert = ({ severity, message, onClose }) => {
-  const [isVisible, setIsVisible] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-      onClose();
-    }, 2000); // 2000 milliseconds = 2 seconds
-
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  const handleClose = () => {
-    setIsVisible(false);
-    onClose();
-  };
-
-  return (
-    <Alert
-      severity={severity}
-      sx={{
-        position: "fixed",
-        top: "50px", // Adjust as needed
-        right: isVisible ? "10px" : "-100%", // Slide in from the right or hide off-screen
-        zIndex: 9999, // Ensure it's above other content
-        transition: "right 0.3s ease-out",
-        backgroundColor: "#E3FBE3", // Background color added here
-        color: "#0A470A",
-      }}
-      onClose={handleClose}
-      variant="filled"
-    >
-      {message}
-    </Alert>
-  );
-}; 
+import { RegisterUser } from "../../redux/slices/auth";
+import { useDispatch, useSelector } from "react-redux";
 
 const RegisterForm = () => {
+  const dispatch = useDispatch();
+  const { isLoading } = useSelector((state) => state.auth);
   const theme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
-  const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string().required("First Name is required"),
@@ -107,12 +73,13 @@ const RegisterForm = () => {
       // Clear password field errors
       methods.clearErrors("password");
 
-      // Simulate form submission success
-      reset();
-      setRegistrationSuccess(true);
+      // Remove confirmPassword from data before sending to backend
+      const { confirmPassword, ...registrationData } = data;
+      
+      // Dispatch the RegisterUser action
+      await dispatch(RegisterUser(registrationData));
     } catch (error) {
       console.log(error);
-      reset();
       setError("afterSubmit", {
         ...error,
         message: error.message,
@@ -120,21 +87,9 @@ const RegisterForm = () => {
     }
   };
 
-  const handleAlertClose = () => {
-    setRegistrationSuccess(false);
-  };
-
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        {registrationSuccess && (
-          <SlideInAlert
-            severity="success"
-            message="Registration trapped successfully 😎✅!"
-            onClose={handleAlertClose}
-          />
-        )}
-
         {!!errors.afterSubmit && (
           <Alert severity="error">{errors.afterSubmit.message}</Alert>
         )}
@@ -208,7 +163,7 @@ const RegisterForm = () => {
           size="large"
           type="submit"
           variant="contained"
-          disabled={isSubmitting}
+          disabled={isSubmitting || isLoading}
           sx={{
             borderRadius: 3,
             padding: "16px 24px",
@@ -273,7 +228,7 @@ const RegisterForm = () => {
             },
           }}
         >
-          {isSubmitting ? "Creating Account..." : "Create Account"}
+          {isSubmitting || isLoading ? "Creating Account..." : "Create Account"}
         </Button>
       </Stack>
     </FormProvider>

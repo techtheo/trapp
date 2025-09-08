@@ -4,6 +4,7 @@ import Router from "./routes";
 import ThemeProvider from './theme';
 // components
 import ThemeSettings from './components/settings';
+import CustomSnackbar from './components/Snackbar';
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
       <ThemeSettings>
         {" "}
         <Router />{" "}
+        <CustomSnackbar />
       </ThemeSettings>
     </ThemeProvider>
   );

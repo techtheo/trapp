@@ -87,10 +87,13 @@ userSchema.pre("save", async function (next) {
   // Only run this function if password was actually modified
   if (!this.isModified("otp") || !this.otp) return next();
 
+  // Log the plain OTP before hashing (for development)
+  if (process.env.NODE_ENV === "development") {
+    console.log("🔐 Plain OTP (Development):", this.otp.toString());
+  }
+
   // Hash the otp with cost of 12
   this.otp = await bcrypt.hash(this.otp.toString(), 12);
-
-  console.log(this.otp.toString(), "FROM PRE SAVE HOOK");
 
   next();
 });

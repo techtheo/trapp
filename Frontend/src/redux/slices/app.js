@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 //
-import { dispatch } from "../store";
+// import { dispatch } from "../store";
 
 const initialState = {
   sidebar: {
@@ -15,6 +15,11 @@ const initialState = {
   messageSelection: {
     isSelectionMode: false,
     selectedMessages: [], // Array of selected message IDs
+  },
+  snackbar: {
+    open: false,
+    severity: null,
+    message: null,
   },
 };
 
@@ -75,6 +80,17 @@ const slice = createSlice({
         state.messageSelection.isSelectionMode = false;
       }
     },
+    // Snackbar
+    openSnackbar(state, action) {
+      state.snackbar.open = true;
+      state.snackbar.severity = action.payload.severity;
+      state.snackbar.message = action.payload.message;
+    },
+    closeSnackbar(state) {
+      state.snackbar.open = false;
+      state.snackbar.severity = null;
+      state.snackbar.message = null;
+    },
   },
 });
 
@@ -83,13 +99,13 @@ export default slice.reducer;
 
 //
 export function ToggleSidebar() {
-  return async () => {
+  return async (dispatch, getState) => {
     dispatch(slice.actions.toggleSidebar());
   };
 }
 
 export function updateSidebarType(type) {
-  return async () => {
+  return async (dispatch, getState) => {
     dispatch(
       slice.actions.updateSidebarType({
         type,
@@ -163,5 +179,27 @@ export function DeleteSelectedMessages(messageIds) {
         messageIds,
       })
     );
+  };
+}
+
+export function showSnackbar({ severity, message }) {
+  return async (dispatch) => {
+    // Validate parameters to prevent MUI capitalize error
+    const validSeverities = ['error', 'warning', 'info', 'success'];
+    const validSeverity = validSeverities.includes(severity) ? severity : 'error';
+    const validMessage = typeof message === 'string' && message.trim() ? message : 'An error occurred';
+    
+    dispatch(
+      slice.actions.openSnackbar({
+        severity: validSeverity,
+        message: validMessage,
+      })
+    );
+  };
+}
+
+export function closeSnackbar() {
+  return async (dispatch) => {
+    dispatch(slice.actions.closeSnackbar());
   };
 }

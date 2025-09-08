@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import {
   Avatar,
@@ -18,11 +19,13 @@ import useSettings from "../../hooks/useSettings";
 import IOSSwitch from "../../components/IOSSwitch";
 import { faker } from "@faker-js/faker";
 import Logo from "../../assets/Images/trapp.png";
+import { LogoutUser } from "../../redux/slices/auth";
 
 const SideBar = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const [selected, setSelected] = useState(0);
   const { onToggleMode } = useSettings();
 
@@ -74,9 +77,7 @@ const SideBar = () => {
       case "Logout":
         // Handle logout functionality here
         console.log("Logout clicked");
-        // You can add logout logic here, e.g.:
-        // dispatch(logout());
-        navigate("/auth/login");
+        dispatch(LogoutUser());
         break;
       default:
         break;
@@ -359,7 +360,7 @@ const SideBar = () => {
             }}
           >
             <Stack spacing={1} px={1}>
-              {Profile_Menu.map((el) => (
+              {Profile_Menu.map((el, idx) => (
                 <MenuItem 
                   onClick={() => handleMenuItemClick(el.title)} 
                   key={el.title}

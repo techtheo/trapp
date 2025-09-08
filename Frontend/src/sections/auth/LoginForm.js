@@ -15,59 +15,21 @@ import {
 import { useTheme } from "@mui/material/styles";
 import { RHFTextField } from "../../components/hook-form";
 import { Eye, EyeSlash } from "phosphor-react";
+import { LoginUser } from "../../redux/slices/auth";
+import { useDispatch, useSelector } from "react-redux";
 
-const SlideInAlert = ({ severity, message, onClose }) => {
-  const [isVisible, setIsVisible] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(false);
-      onClose();
-    }, 2000); // 2000 milliseconds = 2 seconds
-
-    return () => clearTimeout(timer);
-  }, [onClose]);
-
-  const handleClose = () => {
-    setIsVisible(false);
-    onClose();
-  };
-
-  return (
-    <Alert
-      severity={severity}
-      sx={{
-        position: "fixed",
-        top: "50px", // Adjust as needed
-        right: isVisible ? "10px" : "-100%", // Slide in from the right or hide off-screen
-        zIndex: 9999, // Ensure it's above other content
-        transition: "right 0.3s ease-out",
-        backgroundColor: severity === "error" ? "#FBE3E3" : "#E3FBE3", // Background color based on severity
-        color: severity === "error" ? "#B50A0A" : "#0A470A", // Text color based on severity
-      }}
-      onClose={handleClose}
-      variant="filled"
-    >
-      {message}
-    </Alert>
-  );
-};
 
 const LoginForm = () => {
+  const dispatch = useDispatch();
   const theme = useTheme();
   const [showPassword, setShowPassword] = useState(false);
-  const [loginSuccess, setLoginSuccess] = useState(false);
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string()
       .required("Email is required")
       .email("Email must be a valid email address"),
     password: Yup.string()
-      .required("Password is required")
-      .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#£])[A-Za-z\d@$!%*?&#£]{8,}$/,
-        "Password must contain at least one uppercase letter, one lowercase letter, one number, one special character, and be at least 8 characters long"
-      ),
+      .required("Password is required"),
   });
 
   const defaultValues = {
@@ -87,39 +49,22 @@ const LoginForm = () => {
     formState: { errors, isSubmitting },
   } = methods;
 
-  const onSubmit = async (data) => {
-    try {
-      // Submit data to backend (placeholder)
-      console.log(data);
-
-      // Simulate successful login
-      reset();
-      setLoginSuccess(true);
-    } catch (error) {
-      console.log(error);
-      reset();
-      setError("afterSubmit", {
-        ...error,
-        message: error.message,
-      });
-    }
-  };
-
-  const handleAlertClose = () => {
-    setLoginSuccess(false);
-  };
+const onSubmit = async (data) => {
+  try {
+    console.log(data);
+    await dispatch(LoginUser(data));
+  } catch (error) {
+    console.log(error);
+    setError("afterSubmit", {
+      ...error,
+      message: error.message,
+    });
+  }
+};
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Stack spacing={3}>
-        {loginSuccess && (
-          <SlideInAlert
-            severity="success"
-            message="Login trapped successfully 😎✅!"
-            onClose={handleAlertClose}
-          />
-        )}
-
         {!!errors.afterSubmit && (
           <Alert severity="error">{errors.afterSubmit.message}</Alert>
         )}

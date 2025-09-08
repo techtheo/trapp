@@ -1,16 +1,17 @@
 import { Container, Stack } from "@mui/material";
 import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 import Logo from "../../assets/Images/trapp.png";
 
-const isAuthenticated = true;
-
 const MainLayout = () => {
+  const { isLoggedIn } = useSelector((state) => state.auth);
   const location = useLocation();
   const isAuthPage = location.pathname.startsWith('/auth');
 
-  if (!isAuthenticated) {
+  // If user is logged in and trying to access auth pages, redirect to app
+  if (isLoggedIn && isAuthPage) {
     return <Navigate to="/app" />
   }
 
