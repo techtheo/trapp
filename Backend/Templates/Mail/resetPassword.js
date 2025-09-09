@@ -1,297 +1,345 @@
 module.exports = (name, link) => {
-    return `<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-    <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
-    
-    <head>
-      <!--[if gte mso 9]>
-    <xml>
-      <o:OfficeDocumentSettings>
-        <o:AllowPNG/>
-        <o:PixelsPerInch>96</o:PixelsPerInch>
-      </o:OfficeDocumentSettings>
-    </xml>
+    return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Reset Your Trapp Password</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
     <![endif]-->
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="x-apple-disable-message-reformatting">
-      <!--[if !mso]><!-->
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <!--<![endif]-->
-      <title></title>
-    
-      <style type="text/css">
-        @media only screen and (min-width: 620px) {
-          .u-row {
-            width: 600px !important;
-          }
-          .u-row .u-col {
-            vertical-align: top;
-          }
-          .u-row .u-col-100 {
-            width: 600px !important;
-          }
-        }
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
-        @media (max-width: 620px) {
-          .u-row-container {
-            max-width: 100% !important;
-            padding-left: 0px !important;
-            padding-right: 0px !important;
-          }
-          .u-row .u-col {
-            min-width: 320px !important;
-            max-width: 100% !important;
-            display: block !important;
-          }
-          .u-row {
-            width: 100% !important;
-          }
-          .u-col {
-            width: 100% !important;
-          }
-          .u-col>div {
-            margin: 0 auto;
-          }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
-          margin: 0;
-          padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #212B36;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            margin: 0;
+            padding: 0;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
         }
         
-        table,
-        tr,
-        td {
-          vertical-align: top;
-          border-collapse: collapse;
+        .email-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            position: relative;
         }
         
-        p {
-          margin: 0;
+        .email-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(1, 98, 196, 0.5), transparent);
         }
         
-        .ie-container table,
-        .mso-container table {
-          table-layout: fixed;
+        .header {
+            background: linear-gradient(135deg, #FF4842 0%, #FFC107 100%);
+            padding: 40px 40px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
         
-        * {
-          line-height: inherit;
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
         }
         
-        a[x-apple-data-detectors='true'] {
-          color: inherit !important;
-          text-decoration: none !important;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
         }
         
-        table,
-        td {
-          color: #000000;
+        .logo-container {
+            display: inline-flex;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 2;
         }
         
-        #u_body a {
-          color: #0000ee;
-          text-decoration: underline;
+        .logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 700;
+            color: #0162C4;
+            text-decoration: none;
         }
-      </style>
-    
-    
-    
-      <!--[if !mso]><!-->
-      <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet" type="text/css">
-      <!--<![endif]-->
-    
-    </head>
-    
-    <body class="clean-body u_body" style="margin: 0;padding: 0;-webkit-text-size-adjust: 100%;background-color: #f9f9f9;color: #000000">
-      <!--[if IE]><div class="ie-container"><![endif]-->
-      <!--[if mso]><div class="mso-container"><![endif]-->
-      <table id="u_body" style="border-collapse: collapse;table-layout: fixed;border-spacing: 0;mso-table-lspace: 0pt;mso-table-rspace: 0pt;vertical-align: top;min-width: 320px;Margin: 0 auto;background-color: #f9f9f9;width:100%" cellpadding="0" cellspacing="0">
-        <tbody>
-          <tr style="vertical-align: top">
-            <td style="word-break: break-word;border-collapse: collapse !important;vertical-align: top">
-              <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="background-color: #f9f9f9;"><![endif]-->
-    
-    
-              <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #ffffff;">
-                  <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-                    <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: #ffffff;"><![endif]-->
-    
-                    <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
-                    <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                      <div style="height: 100%;width: 100% !important;">
-                        <!--[if (!mso)&(!IE)]><!-->
-                        <div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
-                          <!--<![endif]-->
-    
-                          <table style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                            <tbody>
-                              <tr>
-                                <td style="overflow-wrap:break-word;word-break:break-word;padding:20px;font-family:'Cabin',sans-serif;" align="left">
-    
-                                  <table width="100%" cellpadding="0" cellspacing="0" border="0">
-                                    <tr>
-                                      <td style="padding-right: 0px;padding-left: 0px;" align="center">
-    
-                                        <img align="center" border="0" src="https://assets.unlayer.com/projects/47137/1675000768671-logo.ico" alt="Sateeq Logo" title="Sateeq Logo" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 19%;max-width: 106.4px;"
-                                          width="106.4" />
-    
-                                      </td>
-                                    </tr>
-                                  </table>
-    
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-    
-                          <!--[if (!mso)&(!IE)]><!-->
-                        </div>
-                        <!--<![endif]-->
-                      </div>
-                    </div>
-                    <!--[if (mso)|(IE)]></td><![endif]-->
-                    <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-                  </div>
+        
+        .header-title {
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .header-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            font-weight: 400;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .content {
+            padding: 48px 40px;
+            text-align: center;
+        }
+        
+        .greeting {
+            font-size: 18px;
+            font-weight: 600;
+            color: #212B36;
+            margin-bottom: 16px;
+        }
+        
+        .message {
+            font-size: 16px;
+            color: #637381;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        
+        .reset-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #0162C4 0%, #5BE584 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            margin: 24px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 16px rgba(1, 98, 196, 0.3);
+        }
+        
+        .reset-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(1, 98, 196, 0.4);
+        }
+        
+        .link-fallback {
+            background: #F9FAFB;
+            border: 1px solid #F4F6F8;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 24px 0;
+            word-break: break-all;
+        }
+        
+        .link-fallback-text {
+            font-size: 14px;
+            color: #637381;
+            margin-bottom: 8px;
+        }
+        
+        .link-fallback-url {
+            font-size: 14px;
+            color: #0162C4;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .security-note {
+            background: #FFF7CD;
+            border-left: 4px solid #FFC107;
+            padding: 20px;
+            margin: 32px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .security-note-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #212B36;
+            margin-bottom: 8px;
+        }
+        
+        .security-note-text {
+            font-size: 14px;
+            color: #637381;
+            line-height: 1.5;
+        }
+        
+        .footer {
+            background: #F9FAFB;
+            padding: 32px 40px;
+            text-align: center;
+            border-top: 1px solid #F4F6F8;
+        }
+        
+        .footer-brand {
+            font-size: 16px;
+            font-weight: 600;
+            color: #0162C4;
+            margin-bottom: 8px;
+        }
+        
+        .footer-text {
+            font-size: 14px;
+            color: #637381;
+            margin-bottom: 16px;
+        }
+        
+        .footer-contact {
+            font-size: 14px;
+            color: #637381;
+        }
+        
+        .footer-contact a {
+            color: #0162C4;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer-contact a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Mobile Responsive */
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                margin: 20px;
+                border-radius: 16px;
+            }
+            
+            .header {
+                padding: 32px 24px 48px;
+            }
+            
+            .content {
+                padding: 32px 24px;
+            }
+            
+            .footer {
+                padding: 24px;
+            }
+            
+            .header-title {
+                font-size: 28px;
+            }
+            
+            .reset-button {
+                padding: 14px 24px;
+                font-size: 15px;
+            }
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .email-container {
+                background: #1a1a1a;
+                color: #ffffff;
+            }
+            
+            .greeting {
+                color: #ffffff;
+            }
+            
+            .message {
+                color: #b3b3b3;
+            }
+            
+            .security-note {
+                background: #2a2a2a;
+                color: #ffffff;
+            }
+            
+            .footer {
+                background: #2a2a2a;
+                border-top-color: #3a3a3a;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo">T</div>
+            </div>
+            <h1 class="header-title">Reset Your Password</h1>
+            <p class="header-subtitle">Secure your Trapp account</p>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <div class="greeting">Hello ${name}! 🔐</div>
+            
+            <p class="message">
+                We received a request to reset your password for your <strong>Trapp</strong> account. 
+                Click the button below to create a new password. If you didn't request this, you can safely ignore this email.
+            </p>
+            
+            <a href="${link}" class="reset-button">Reset My Password</a>
+            
+            <div class="link-fallback">
+                <div class="link-fallback-text">If the button doesn't work, copy and paste this link:</div>
+                <div class="link-fallback-url">${link}</div>
+            </div>
+            
+            <div class="security-note">
+                <div class="security-note-title">⚠️ Security Notice</div>
+                <div class="security-note-text">
+                    This password reset link will expire in 1 hour for your security. If you didn't request this reset, please contact our support team immediately.
                 </div>
-              </div>
-    
-    
-    
-              <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e5eaf5;">
-                  <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-                    <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: #e5eaf5;"><![endif]-->
-    
-                    <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
-                    <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                      <div style="height: 100%;width: 100% !important;">
-                        <!--[if (!mso)&(!IE)]><!-->
-                        <div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
-                          <!--<![endif]-->
-    
-                          <table style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                            <tbody>
-                              <tr>
-                                <td style="overflow-wrap:break-word;word-break:break-word;padding:55px;font-family:'Cabin',sans-serif;" align="left">
-    
-                                  <div style="color: #ffffff; line-height: 140%; text-align: left; word-wrap: break-word;">
-                                    <p style="font-size: 14px; line-height: 140%;"><span style="color: #000000; line-height: 19.6px;">Hello ${name},</span></p>
-                                    <p style="font-size: 14px; line-height: 140%;"> </p>
-                                    <p style="font-size: 14px; line-height: 140%;"><span style="color: #000000; line-height: 19.6px;">Please click on the given button to reset your password</span><br /><br /><span style="color: #000000; line-height: 19.6px;">Note: This link is valid for only 10 mins.</span></p>
-                                    <p style="font-size: 14px; line-height: 140%;"><br /><br /><span style="color: #000000; line-height: 19.6px;">Thanks &amp; Regards</span><br /><span style="color: #000000; line-height: 19.6px;">Team Task</span></p>
-                                  </div>
-    
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-    
-                          <!--[if (!mso)&(!IE)]><!-->
-                        </div>
-                        <!--<![endif]-->
-                      </div>
-                    </div>
-                    <!--[if (mso)|(IE)]></td><![endif]-->
-                    <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-                  </div>
-                </div>
-              </div>
-    
-    
-    
-              <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: #e5eaf5;">
-                  <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-                    <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: #e5eaf5;"><![endif]-->
-    
-                    <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;" valign="top"><![endif]-->
-                    <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                      <div style="height: 100%;width: 100% !important;">
-                        <!--[if (!mso)&(!IE)]><!-->
-                        <div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;">
-                          <!--<![endif]-->
-    
-                          <table style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                            <tbody>
-                              <tr>
-                                <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Cabin',sans-serif;" align="left">
-    
-                                  <!--[if mso]><style>.v-button {background: transparent !important;}</style><![endif]-->
-                                  <div align="center">
-                                    <!--[if mso]><v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word" href="${link}" style="height:56px; v-text-anchor:middle; width:156px;" arcsize="7%"  stroke="f" fillcolor="#115581"><w:anchorlock/><center style="color:#FFFFFF;font-family:'Cabin',sans-serif;"><![endif]-->
-                                    <a href="${link}" target="_blank" class="v-button" style="box-sizing: border-box;display: inline-block;font-family:'Cabin',sans-serif;text-decoration: none;-webkit-text-size-adjust: none;text-align: center;color: #FFFFFF; background-color: #115581; border-radius: 4px;-webkit-border-radius: 4px; -moz-border-radius: 4px; width:auto; max-width:100%; overflow-wrap: break-word; word-break: break-word; word-wrap:break-word; mso-border-alt: none;font-size: 14px;">
-                                      <span style="display:block;padding:20px 32px;line-height:120%;"><span style="line-height: 16.8px;">Reset Password</span></span>
-                                    </a>
-                                    <!--[if mso]></center></v:roundrect><![endif]-->
-                                  </div>
-    
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-    
-                          <!--[if (!mso)&(!IE)]><!-->
-                        </div>
-                        <!--<![endif]-->
-                      </div>
-                    </div>
-                    <!--[if (mso)|(IE)]></td><![endif]-->
-                    <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-                  </div>
-                </div>
-              </div>
-    
-    
-    
-              <div class="u-row-container" style="padding: 0px;background-color: transparent">
-                <div class="u-row" style="Margin: 0 auto;min-width: 320px;max-width: 600px;overflow-wrap: break-word;word-wrap: break-word;word-break: break-word;background-color: transparent;">
-                  <div style="border-collapse: collapse;display: table;width: 100%;height: 100%;background-color: transparent;">
-                    <!--[if (mso)|(IE)]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding: 0px;background-color: transparent;" align="center"><table cellpadding="0" cellspacing="0" border="0" style="width:600px;"><tr style="background-color: transparent;"><![endif]-->
-    
-                    <!--[if (mso)|(IE)]><td align="center" width="600" style="width: 600px;padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;" valign="top"><![endif]-->
-                    <div class="u-col u-col-100" style="max-width: 320px;min-width: 600px;display: table-cell;vertical-align: top;">
-                      <div style="height: 100%;width: 100% !important;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                        <!--[if (!mso)&(!IE)]><!-->
-                        <div style="box-sizing: border-box; height: 100%; padding: 0px;border-top: 0px solid transparent;border-left: 0px solid transparent;border-right: 0px solid transparent;border-bottom: 0px solid transparent;border-radius: 0px;-webkit-border-radius: 0px; -moz-border-radius: 0px;">
-                          <!--<![endif]-->
-    
-                          <table style="font-family:'Cabin',sans-serif;" role="presentation" cellpadding="0" cellspacing="0" width="100%" border="0">
-                            <tbody>
-                              <tr>
-                                <td style="overflow-wrap:break-word;word-break:break-word;padding:48px;font-family:'Cabin',sans-serif;" align="left">
-    
-                                  <div style="color: #958d8d; line-height: 170%; text-align: center; word-wrap: break-word;">
-                                    <p style="font-size: 14px; line-height: 170%;">Love 💙 Team Tawk</p>
-                                    <p style="font-size: 14px; line-height: 170%;">For any assistance and queries write to us at <a rel="noopener" href="mailto:support@codingmonk.in?" target="_blank">Support@codingmonk.in</a><br /><br /></p>
-                                  </div>
-    
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-    
-                          <!--[if (!mso)&(!IE)]><!-->
-                        </div>
-                        <!--<![endif]-->
-                      </div>
-                    </div>
-                    <!--[if (mso)|(IE)]></td><![endif]-->
-                    <!--[if (mso)|(IE)]></tr></table></td></tr></table><![endif]-->
-                  </div>
-                </div>
-              </div>
-    
-    
-              <!--[if (mso)|(IE)]></td></tr></table><![endif]-->
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <!--[if mso]></div><![endif]-->
-      <!--[if IE]></div><![endif]-->
-    </body>
-    
-    </html>`
-}
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <div class="footer-brand">💙 Team Trapp</div>
+            <div class="footer-text">
+                Your account security is our priority!
+            </div>
+            <div class="footer-contact">
+                Need help? Contact us at <a href="mailto:domaintrapp@gmail.com">domaintrapp@gmail.com</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+    `;
+};

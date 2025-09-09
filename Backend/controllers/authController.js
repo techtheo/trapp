@@ -94,6 +94,15 @@ exports.sendOTP = catchAsync(async (req, res, next) => {
 
   // Send mail with error handling
   try {
+    console.log("📧 Preparing to send OTP email...");
+    console.log("📧 Email details:", {
+      to: user.email,
+      from: "domaintrapp@gmail.com",
+      subject: "Verification OTP for TRAPP",
+      firstName: user.firstName,
+      otp: new_otp
+    });
+    
     await mailService.sendEmail({
       from: "domaintrapp@gmail.com",
       to: user.email,
@@ -104,6 +113,7 @@ exports.sendOTP = catchAsync(async (req, res, next) => {
     console.log("📧 OTP email sent successfully to:", user.email);
   } catch (emailError) {
     console.error("📧 Email sending failed:", emailError.message);
+    console.error("📧 Full email error:", emailError);
     // Don't fail the registration if email fails - user can still use resend
   }
 

@@ -4,6 +4,7 @@ import {
   IconButton,
   Stack,
   Typography,
+  useMediaQuery,
 } from "@mui/material";
 import React, { useState } from "react";
 
@@ -22,6 +23,10 @@ import CreateGroup from "../../sections/main/CreateGroup";
 const Group = () => {
   const theme = useTheme();
   const [openDialog, setOpenDialog] = useState(false);
+  
+  // Responsive breakpoints
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
@@ -29,15 +34,22 @@ const Group = () => {
 
   return (
     <>
-      <Stack direction={"row"} sx={{ width: "100%" }}>
-        {/* Left */}
+      <Stack 
+        direction={"row"} 
+        sx={{ 
+          width: "100%",
+          height: "100vh",
+          overflow: "hidden"
+        }}
+      >
+        {/* Left Panel */}
         <Box
           sx={{
             position: "relative",
-            width: 320,
-            minWidth: 320,
-            maxWidth: 320,
-            overflow: "hidden", // Prevent any content from expanding the container
+            width: isMobile ? "100%" : isTablet ? 280 : 320,
+            minWidth: isMobile ? "100%" : isTablet ? 280 : 320,
+            maxWidth: isMobile ? "100%" : isTablet ? 280 : 320,
+            overflow: "hidden",
             backgroundColor:
               theme.palette.mode === "light"
                 ? "#F8FAFF"
@@ -45,9 +57,18 @@ const Group = () => {
             boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
           }}
         >
-          <Stack p={3} spacing={2} sx={{ height: "100vh" }}>
+          <Stack 
+            p={isMobile ? 2 : 3} 
+            spacing={2} 
+            sx={{ height: "100vh" }}
+          >
             <Stack>
-              <Typography variant="h5">Groups</Typography>
+              <Typography 
+                variant={isMobile ? "h6" : "h5"}
+                sx={{ fontWeight: 600 }}
+              >
+                Groups
+              </Typography>
             </Stack>
 
             <Stack sx={{ width: "100%" }}>
@@ -66,18 +87,35 @@ const Group = () => {
               direction={"row"}
               justifyContent={"space-between"}
               alignItems={"center"}
+              sx={{ 
+                flexWrap: isMobile ? "wrap" : "nowrap",
+                gap: isMobile ? 1 : 0
+              }}
             >
               <Typography 
-                variant="subtitle2" 
+                variant={isMobile ? "body2" : "subtitle2"}
                 component="span"
-                sx={{ color: theme.palette.primary.main }}
+                sx={{ 
+                  color: theme.palette.primary.main,
+                  fontWeight: 600,
+                  flex: isMobile ? "1 1 auto" : "none"
+                }}
               >
                 Create New Group
               </Typography>
-              <IconButton onClick={() => {
-                setOpenDialog(true);
-              }}>
-                <Plus style={{ color: theme.palette.primary.main }} />
+              <IconButton 
+                onClick={() => {
+                  setOpenDialog(true);
+                }}
+                sx={{
+                  flexShrink: 0,
+                  p: isMobile ? 1 : 1.5
+                }}
+              >
+                <Plus 
+                  size={isMobile ? 18 : 20}
+                  style={{ color: theme.palette.primary.main }} 
+                />
               </IconButton>
             </Stack>
             <Divider />

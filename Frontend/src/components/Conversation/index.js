@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Stack, Box, Menu, MenuItem, Typography, Fade } from "@mui/material";
+import { Stack, Box, Menu, MenuItem, Typography, Fade, useMediaQuery } from "@mui/material";
 import { useTheme, alpha } from "@mui/material/styles";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -56,6 +56,9 @@ const ConversationMenuOptions = [
 const Conversation = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
+  
+  // Responsive breakpoints
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { sidebar } = useSelector((store) => store.app);
   const selectedChatId = useSelector((store) => {
     try {
@@ -160,7 +163,7 @@ const Conversation = () => {
         sx={{
           flexGrow: 1,
           height: "100%",
-          overflow: "hidden", // Changed from "scroll" to "hidden"
+          overflow: "hidden",
           position: "relative",
           background:
             selectedChatId && theme.palette.mode === "light"
@@ -170,10 +173,11 @@ const Conversation = () => {
                 )} 0%, transparent 10%)`
               : "transparent",
           cursor: "context-menu",
+          px: isMobile ? 1 : 0,
         }}
       >
         <Scrollbar>
-          <Message menu={true} />
+          <Message menu={true} isMobile={isMobile} />
         </Scrollbar>
       </Box>
       {/* Chat Footer*/}

@@ -21,6 +21,7 @@ import {
   DialogActions,
   InputAdornment,
   LinearProgress,
+  useMediaQuery,
 } from "@mui/material";
 import { useTheme, styled, alpha } from "@mui/material/styles";
 import {
@@ -45,11 +46,11 @@ import { faker } from "@faker-js/faker";
 import Scrollbar from "../../components/Scrollbar";
 
 // Styled components
-const ProfileContainer = styled(Box)(({ theme }) => ({
+const ProfileContainer = styled(Box)(({ theme, isMobile, isTablet }) => ({
   height: "100vh",
-  width: 320,
-  minWidth: 320,
-  maxWidth: 320,
+  width: isMobile ? "100%" : isTablet ? 280 : 320,
+  minWidth: isMobile ? "100%" : isTablet ? 280 : 320,
+  maxWidth: isMobile ? "100%" : isTablet ? 280 : 320,
   backgroundColor:
     theme.palette.mode === "light" ? "#F8FAFF" : theme.palette.background.paper,
   boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
@@ -227,6 +228,10 @@ const StatusChip = styled(Chip)(({ theme, status }) => ({
 const Profile = () => {
   const theme = useTheme();
   const navigate = useNavigate();
+  
+  // Responsive breakpoints
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
   const [profileData, setProfileData] = useState({
     name: faker.person.fullName(),
     email: faker.internet.email(),
@@ -499,22 +504,31 @@ const Profile = () => {
   ];
 
   return (
-    <Stack direction="row" sx={{ width: "100%" }}>
-      <ProfileContainer>
+    <Stack 
+      direction="row" 
+      sx={{ 
+        width: "100%",
+        height: "100vh",
+        overflow: "hidden"
+      }}
+    >
+      <ProfileContainer isMobile={isMobile} isTablet={isTablet}>
         {/* Fixed Header */}
-        <Box sx={{ flexShrink: 0, p: 4, pb: 2 }}>
-          <Stack direction="row" alignItems="center" spacing={3}>
+        <Box sx={{ flexShrink: 0, p: isMobile ? 2 : 4, pb: 2 }}>
+          <Stack direction="row" alignItems="center" spacing={isMobile ? 2 : 3}>
             <IconButton onClick={() => navigate(-1)}>
-              <CaretLeft size={24} color="#4B4B4B" />
+              <CaretLeft size={isMobile ? 20 : 24} color="#4B4B4B" />
             </IconButton>
-            <Typography variant="h6">Profile</Typography>
+            <Typography variant={isMobile ? "subtitle1" : "h6"} sx={{ fontWeight: 600 }}>
+              Profile
+            </Typography>
           </Stack>
         </Box>
 
         {/* Scrollable Content */}
         <Box sx={{ flex: 1, overflow: "hidden" }}>
           <Scrollbar>
-            <Stack spacing={3} sx={{ px: 4, pb: 4 }}>
+            <Stack spacing={isMobile ? 2 : 3} sx={{ px: isMobile ? 2 : 4, pb: isMobile ? 2 : 4 }}>
               {/* Upload Status Alert */}
               {uploadStatus && (
                 <Alert
@@ -536,13 +550,13 @@ const Profile = () => {
 
               {/* Profile Picture Section */}
               <ProfileCard>
-                <CardContent sx={{ textAlign: "center", py: 4 }}>
+                <CardContent sx={{ textAlign: "center", py: isMobile ? 3 : 4 }}>
                   <AvatarContainer>
                     <Avatar
                       src={profileData.avatar}
                       sx={{
-                        width: 120,
-                        height: 120,
+                        width: isMobile ? 100 : 120,
+                        height: isMobile ? 100 : 120,
                         mx: "auto",
                         mb: 2,
                         border: `4px solid ${alpha(
@@ -568,7 +582,10 @@ const Profile = () => {
                     </CameraOverlay>
                   </AvatarContainer>
 
-                  <Typography variant="h5" sx={{ fontWeight: 600, mb: 1 }}>
+                  <Typography 
+                    variant={isMobile ? "h6" : "h5"} 
+                    sx={{ fontWeight: 600, mb: 1 }}
+                  >
                     {profileData.name}
                   </Typography>
 

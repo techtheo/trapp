@@ -25,6 +25,7 @@ import {
   TextField,
   InputAdornment,
   Chip,
+  useMediaQuery,
 } from "@mui/material";
 import {
   CaretDown,
@@ -541,6 +542,9 @@ const ConversationMenuOptions = [
 const Header = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
+  
+  // Responsive breakpoints
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const { sidebar, messageSelection } = useSelector((store) => store.app);
 
   const [conversationMenuAnchorEl, setConversationMenuAnchorEl] =
@@ -736,7 +740,7 @@ const Header = () => {
   // Normal header
   return (
     <Box
-      p={2}
+      p={isMobile ? 1.5 : 2}
       sx={{
         width: "100%",
         backgroundColor:
@@ -776,21 +780,32 @@ const Header = () => {
             </StyledBadge>
           </Box>
           <Stack spacing={0.2}>
-            <Typography variant="subtitle2">
+            <Typography 
+              variant={isMobile ? "body2" : "subtitle2"}
+              sx={{ fontWeight: 600 }}
+            >
               {faker.person.fullName()}
             </Typography>
             <Typography variant="caption">Online</Typography>
           </Stack>
         </Stack>
-        <Stack direction="row" alignItems={"center"} spacing={3}>
+        <Stack 
+          direction="row" 
+          alignItems={"center"} 
+          spacing={isMobile ? 1 : 3}
+        >
+          {!isMobile && (
+            <>
+              <IconButton>
+                <VideoCamera />
+              </IconButton>
+              <IconButton>
+                <Phone />
+              </IconButton>
+            </>
+          )}
           <IconButton>
-            <VideoCamera />
-          </IconButton>
-          <IconButton>
-            <Phone />
-          </IconButton>
-          <IconButton>
-            <MagnifyingGlass />
+            <MagnifyingGlass size={isMobile ? 18 : 20} />
           </IconButton>
           <Divider orientation="vertical" flexItem />
           <IconButton
@@ -802,7 +817,7 @@ const Header = () => {
             aria-expanded={openConversationMenu ? "true" : undefined}
             onClick={handleClickConversationMenu}
           >
-            <CaretDown />
+            <CaretDown size={isMobile ? 16 : 20} />
           </IconButton>
           <Menu
             MenuListProps={{

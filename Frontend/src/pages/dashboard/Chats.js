@@ -5,6 +5,7 @@ import {
   Typography,
   Button,
   Divider,
+  useMediaQuery,
 } from "@mui/material";
 import { ArchiveBox, CircleDashed, MagnifyingGlass } from "phosphor-react";
 import { useTheme } from "@mui/material/styles";
@@ -20,14 +21,19 @@ import ChatElement from "../../components/ChatElement";
 
 const Chats = () => {
   const theme = useTheme();
+  
+  // Responsive breakpoints
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
+  
   return (
     <Box
       sx={{
         position: "relative",
-        width: 320,
-        minWidth: 320,
-        maxWidth: 320,
-        overflow: "hidden", // Prevent any content from expanding the container
+        width: isMobile ? "100%" : isTablet ? 280 : 320,
+        minWidth: isMobile ? "100%" : isTablet ? 280 : 320,
+        maxWidth: isMobile ? "100%" : isTablet ? 280 : 320,
+        overflow: "hidden",
         backgroundColor:
           theme.palette.mode === "light"
             ? "#F8FAFF"
@@ -35,15 +41,20 @@ const Chats = () => {
         boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
       }}
     >
-      <Stack p={3} spacing={2} sx={{ height: "100vh" }}>
+      <Stack p={isMobile ? 2 : 3} spacing={2} sx={{ height: "100vh" }}>
         <Stack
           direction="row"
           alignItems={"center"}
           justifyContent="space-between"
         >
-          <Typography variant="h5">Chats</Typography>
-          <IconButton>
-            <CircleDashed />
+          <Typography 
+            variant={isMobile ? "h6" : "h5"}
+            sx={{ fontWeight: 600 }}
+          >
+            Chats
+          </Typography>
+          <IconButton sx={{ p: isMobile ? 1 : 1.5 }}>
+            <CircleDashed size={isMobile ? 20 : 24} />
           </IconButton>
         </Stack>
         <Stack sx={{ width: "100%" }}>
