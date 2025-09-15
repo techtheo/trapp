@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Avatar,
@@ -22,7 +22,6 @@ import {
   InputAdornment,
   LinearProgress,
   useMediaQuery,
-  CircularProgress,
 } from "@mui/material";
 import { useTheme, styled, alpha } from "@mui/material/styles";
 import {
@@ -43,16 +42,10 @@ import {
   Lock,
   Key,
 } from "phosphor-react";
+import { faker } from "@faker-js/faker";
 import Scrollbar from "../../components/Scrollbar";
-import { useDispatch, useSelector } from "../../redux/store";
-import {
-  fetchUserProfile,
-  updateUserProfile,
-  uploadAvatar,
-  changePassword,
-} from "../../redux/slices/user";
 
-// Styled components (keeping the same as original)
+// Styled components
 const ProfileContainer = styled(Box)(({ theme, isMobile, isTablet }) => ({
   height: "100vh",
   width: isMobile ? "100%" : isTablet ? 280 : 320,
@@ -184,12 +177,16 @@ const EditableField = styled(Box)(({ theme, isEditing }) => ({
 
 const StatusChip = styled(Chip)(({ theme, status }) => ({
   backgroundColor:
-    status === "Online"
+    status === "online"
       ? alpha(theme.palette.success.main, 0.1)
+      : status === "away"
+      ? alpha(theme.palette.warning.main, 0.1)
       : alpha(theme.palette.error.main, 0.1),
   color:
-    status === "Online"
+    status === "online"
       ? theme.palette.success.main
+      : status === "away"
+      ? theme.palette.warning.main
       : theme.palette.error.main,
   fontWeight: 600,
   fontSize: "0.75rem",
@@ -198,20 +195,26 @@ const StatusChip = styled(Chip)(({ theme, status }) => ({
   cursor: "pointer",
   transition: "all 0.3s ease",
   border: `1px solid ${
-    status === "Online"
+    status === "online"
       ? alpha(theme.palette.success.main, 0.3)
+      : status === "away"
+      ? alpha(theme.palette.warning.main, 0.3)
       : alpha(theme.palette.error.main, 0.3)
   }`,
 
   "&:hover": {
     transform: "scale(1.05)",
     backgroundColor:
-      status === "Online"
+      status === "online"
         ? alpha(theme.palette.success.main, 0.2)
+        : status === "away"
+        ? alpha(theme.palette.warning.main, 0.2)
         : alpha(theme.palette.error.main, 0.2),
     boxShadow: `0 4px 12px ${
-      status === "Online"
+      status === "online"
         ? alpha(theme.palette.success.main, 0.3)
+        : status === "away"
+        ? alpha(theme.palette.warning.main, 0.3)
         : alpha(theme.palette.error.main, 0.3)
     }`,
   },
@@ -225,22 +228,24 @@ const StatusChip = styled(Chip)(({ theme, status }) => ({
 const Profile = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  
-  // Redux state
-  const { user, isLoading, isUpdating, isUploadingAvatar, error } = useSelector(
-    (state) => state.user
-  );
   
   // Responsive breakpoints
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
+  const [profileData, setProfileData] = useState({
+    name: faker.person.fullName(),
+    email: faker.internet.email(),
+    phone: faker.phone.number(),
+    location: faker.location.city(),
+    bio: faker.lorem.sentence(),
+    avatar: faker.image.avatar(),
+    status: "online", // online, away, busy
+    joinDate: "March 2023",
+  });
 
-  // Local state
   const [editingField, setEditingField] = useState(null);
   const [tempValue, setTempValue] = useState("");
   const [uploadStatus, setUploadStatus] = useState(null);
-  const [avatarTimestamp, setAvatarTimestamp] = useState(Date.now());
 
   // Change Password Modal State
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
@@ -258,21 +263,7 @@ const Profile = () => {
   const [passwordErrors, setPasswordErrors] = useState([]);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
 
-  // Fetch user profile on component mount
-  useEffect(() => {
-    dispatch(fetchUserProfile());
-  }, [dispatch]);
-
-  // Debug: Log user data changes
-  useEffect(() => {
-    console.log("User data updated:", user);
-    if (user?.avatar) {
-      console.log("Current avatar URL:", user.avatar);
-    }
-  }, [user]);
-
-  // Handle image upload
-  const handleImageUpload = async (event) => {
+  const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
       // Validate file type
@@ -289,41 +280,49 @@ const Profile = () => {
         return;
       }
 
-      try {
-        setUploadStatus("uploading");
-        console.log("Starting avatar upload for file:", file.name);
-        const result = await dispatch(uploadAvatar(file));
-        console.log("Avatar upload result:", result);
-        setAvatarTimestamp(Date.now()); // Update timestamp to bust cache
-        setUploadStatus("success");
-        setTimeout(() => setUploadStatus(null), 3000);
-      } catch (error) {
-        console.error("Avatar upload error:", error);
-        setUploadStatus("error");
-        setTimeout(() => setUploadStatus(null), 3000);
-      }
+      // Simulate upload process
+      setUploadStatus("uploading");
+
+      // Create preview URL
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setTimeout(() => {
+          setProfileData((prev) => ({
+            ...prev,
+            avatar: e.target.result,
+          }));
+          setUploadStatus("success");
+          setTimeout(() => setUploadStatus(null), 3000);
+        }, 1500);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  // Handle field editing
   const handleEdit = (field, currentValue) => {
     setEditingField(field);
-    setTempValue(currentValue || "");
+    setTempValue(currentValue);
   };
 
-  const handleSave = async (field) => {
-    try {
-      await dispatch(updateUserProfile({ [field]: tempValue }));
-      setEditingField(null);
-      setTempValue("");
-    } catch (error) {
-      // Error is handled by Redux
-    }
+  const handleSave = (field) => {
+    setProfileData((prev) => ({
+      ...prev,
+      [field]: tempValue,
+    }));
+    setEditingField(null);
+    setTempValue("");
   };
 
   const handleCancel = () => {
     setEditingField(null);
     setTempValue("");
+  };
+
+  const handleStatusChange = (newStatus) => {
+    setProfileData((prev) => ({
+      ...prev,
+      status: newStatus,
+    }));
   };
 
   // Password validation function
@@ -423,18 +422,14 @@ const Profile = () => {
 
     setIsChangingPassword(true);
 
-    try {
-      await dispatch(changePassword({
-        currentPassword: passwordData.currentPassword,
-        newPassword: passwordData.newPassword,
-        confirmPassword: passwordData.confirmPassword,
-      }));
-      handleCloseChangePassword();
-    } catch (error) {
-      // Error is handled by Redux
-    } finally {
+    // Simulate API call
+    setTimeout(() => {
       setIsChangingPassword(false);
-    }
+      handleCloseChangePassword();
+      // Show success message
+      setUploadStatus("success");
+      setTimeout(() => setUploadStatus(null), 3000);
+    }, 2000);
   };
 
   // Get password strength color and text
@@ -464,46 +459,38 @@ const Profile = () => {
     }
   };
 
-  // Profile fields configuration
-  const profileFields = user ? [
+  const profileFields = [
     {
-      key: "firstName",
-      label: "First Name",
+      key: "name",
+      label: "Full Name",
       icon: <User size={20} />,
-      value: user.firstName,
-    },
-    {
-      key: "lastName",
-      label: "Last Name",
-      icon: <User size={20} />,
-      value: user.lastName,
+      value: profileData.name,
     },
     {
       key: "email",
       label: "Email",
       icon: <Envelope size={20} />,
-      value: user.email,
-      readOnly: true, // Email should not be editable
+      value: profileData.email,
     },
     {
       key: "phone",
       label: "Phone",
       icon: <Phone size={20} />,
-      value: user.phone || "Not provided",
+      value: profileData.phone,
     },
     {
       key: "location",
       label: "Location",
       icon: <MapPin size={20} />,
-      value: user.location || "Not provided",
+      value: profileData.location,
     },
     {
-      key: "about",
+      key: "bio",
       label: "Bio",
       icon: <PencilSimple size={20} />,
-      value: user.about || "No bio available",
+      value: profileData.bio,
     },
-  ] : [];
+  ];
 
   const privacySettings = [
     { key: "showOnline", label: "Show online status", defaultChecked: true },
@@ -515,45 +502,6 @@ const Profile = () => {
       defaultChecked: true,
     },
   ];
-
-  // Format join date
-  const formatJoinDate = (dateString) => {
-    if (!dateString) return "Unknown";
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long' 
-    });
-  };
-
-  // Loading state
-  if (isLoading && !user) {
-    return (
-      <ProfileContainer isMobile={isMobile} isTablet={isTablet}>
-        <Box sx={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          height: '100%' 
-        }}>
-          <CircularProgress />
-        </Box>
-      </ProfileContainer>
-    );
-  }
-
-  // Error state
-  if (error && !user) {
-    return (
-      <ProfileContainer isMobile={isMobile} isTablet={isTablet}>
-        <Box sx={{ p: 3 }}>
-          <Alert severity="error">
-            Failed to load profile: {error}
-          </Alert>
-        </Box>
-      </ProfileContainer>
-    );
-  }
 
   return (
     <Stack 
@@ -605,20 +553,7 @@ const Profile = () => {
                 <CardContent sx={{ textAlign: "center", py: isMobile ? 3 : 4 }}>
                   <AvatarContainer>
                     <Avatar
-                      src={user?.avatar ? `${user.avatar}?t=${avatarTimestamp}` : undefined}
-                      imgProps={{
-                        crossOrigin: "anonymous",
-                        onError: (e) => {
-                          console.error("Avatar image failed to load:", user?.avatar);
-                          console.error("Full avatar URL with timestamp:", `${user.avatar}?t=${avatarTimestamp}`);
-                          console.error("Image error event:", e);
-                          // Don't hide the image, let Avatar component show fallback
-                        },
-                        onLoad: () => {
-                          console.log("Avatar image loaded successfully:", user?.avatar);
-                          console.log("Full avatar URL with timestamp:", `${user.avatar}?t=${avatarTimestamp}`);
-                        }
-                      }}
+                      src={profileData.avatar}
                       sx={{
                         width: isMobile ? 100 : 120,
                         height: isMobile ? 100 : 120,
@@ -629,15 +564,12 @@ const Profile = () => {
                           0.2
                         )}`,
                       }}
-                    >
-                      {user?.firstName?.[0]}{user?.lastName?.[0]}
-                    </Avatar>
+                    />
                     <CameraOverlay className="camera-overlay">
                       <input
                         type="file"
                         accept="image/*"
                         onChange={handleImageUpload}
-                        disabled={isUploadingAvatar}
                         style={{
                           position: "absolute",
                           width: "100%",
@@ -646,11 +578,7 @@ const Profile = () => {
                           cursor: "pointer",
                         }}
                       />
-                      {isUploadingAvatar ? (
-                        <CircularProgress size={24} color="inherit" />
-                      ) : (
-                        <Camera size={24} />
-                      )}
+                      <Camera size={24} />
                     </CameraOverlay>
                   </AvatarContainer>
 
@@ -658,7 +586,7 @@ const Profile = () => {
                     variant={isMobile ? "h6" : "h5"} 
                     sx={{ fontWeight: 600, mb: 1 }}
                   >
-                    {user?.firstName} {user?.lastName}
+                    {profileData.name}
                   </Typography>
 
                   <Stack
@@ -668,9 +596,18 @@ const Profile = () => {
                     sx={{ mb: 2 }}
                   >
                     <StatusChip
-                      label={user?.status || "Offline"}
-                      status={user?.status || "Offline"}
-                      sx={{ cursor: "default" }}
+                      label={profileData.status}
+                      status={profileData.status}
+                      onClick={() => {
+                        const statuses = ["online", "away", "busy"];
+                        const currentIndex = statuses.indexOf(
+                          profileData.status
+                        );
+                        const nextStatus =
+                          statuses[(currentIndex + 1) % statuses.length];
+                        handleStatusChange(nextStatus);
+                      }}
+                      sx={{ cursor: "pointer" }}
                     />
                   </Stack>
 
@@ -679,7 +616,7 @@ const Profile = () => {
                       size={16}
                       style={{ marginRight: 8, verticalAlign: "middle" }}
                     />
-                    Joined {formatJoinDate(user?.createdAt)}
+                    Joined {profileData.joinDate}
                   </Typography>
                 </CardContent>
               </ProfileCard>
@@ -692,7 +629,7 @@ const Profile = () => {
                   </Typography>
 
                   <Stack spacing={2}>
-                    {profileFields.map(({ key, label, icon, value, readOnly }) => (
+                    {profileFields.map(({ key, label, icon, value }) => (
                       <EditableField key={key} isEditing={editingField === key}>
                         <Stack
                           direction="row"
@@ -717,10 +654,9 @@ const Profile = () => {
                                 size="small"
                                 variant="standard"
                                 sx={{ mt: 0.5 }}
-                                multiline={key === "about"}
-                                rows={key === "about" ? 2 : 1}
+                                multiline={key === "bio"}
+                                rows={key === "bio" ? 2 : 1}
                                 autoFocus
-                                disabled={isUpdating}
                               />
                             ) : (
                               <Typography
@@ -745,34 +681,26 @@ const Profile = () => {
                               <IconButton
                                 size="small"
                                 onClick={() => handleSave(key)}
-                                disabled={isUpdating}
                                 sx={{ color: theme.palette.success.main }}
                               >
-                                {isUpdating ? (
-                                  <CircularProgress size={16} />
-                                ) : (
-                                  <Check size={16} />
-                                )}
+                                <Check size={16} />
                               </IconButton>
                               <IconButton
                                 size="small"
                                 onClick={handleCancel}
-                                disabled={isUpdating}
                                 sx={{ color: theme.palette.error.main }}
                               >
                                 <X size={16} />
                               </IconButton>
                             </>
                           ) : (
-                            !readOnly && (
-                              <IconButton
-                                size="small"
-                                onClick={() => handleEdit(key, value)}
-                                sx={{ color: theme.palette.text.secondary }}
-                              >
-                                <PencilSimple size={16} />
-                              </IconButton>
-                            )
+                            <IconButton
+                              size="small"
+                              onClick={() => handleEdit(key, value)}
+                              sx={{ color: theme.palette.text.secondary }}
+                            >
+                              <PencilSimple size={16} />
+                            </IconButton>
                           )}
                         </Stack>
                       </EditableField>

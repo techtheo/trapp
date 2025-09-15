@@ -103,4 +103,11 @@ router.get(
   mediaController.getUserMedia
 );
 
+// Test B2 configuration
+router.get(
+  '/test-b2',
+  authController.protect,
+  mediaController.testB2Config
+);
+
 module.exports = router;

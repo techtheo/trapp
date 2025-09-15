@@ -110,10 +110,14 @@ class B2StorageService {
   getDownloadUrl(fileName) {
     // Use the download URL base from the authorization response
     if (this.downloadUrlBase) {
-      return `${this.downloadUrlBase}/file/${this.bucketName}/${fileName}`;
+      const url = `${this.downloadUrlBase}/file/${this.bucketName}/${fileName}`;
+      console.log('Generated B2 download URL:', url);
+      return url;
     }
     // Fallback to generic format if downloadUrlBase is not available
-    return `https://f005.backblazeb2.com/file/${this.bucketName}/${fileName}`;
+    const fallbackUrl = `https://f005.backblazeb2.com/file/${this.bucketName}/${fileName}`;
+    console.log('Generated B2 fallback URL:', fallbackUrl);
+    return fallbackUrl;
   }
 
   // Create multer storage configuration

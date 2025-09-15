@@ -502,3 +502,49 @@ exports.logoutAllDevices = catchAsync(async (req, res, next) => {
     tokensInvalidated: result.modifiedCount,
   });
 });
+
+// Change Password (for authenticated users)
+exports.changePassword = catchAsync(async (req, res, next) => {
+  const { currentPassword, newPassword, confirmPassword } = req.body;
+
+  // 1) Get user from collection
+  const user = await User.findById(req.user._id).select('+password');
+
+  // 2) Check if current password is correct
+  if (!user || !(await user.correctPassword(currentPassword, user.password))) {
+    return res.status(400).json({
+      status: "error",
+      message: "Current password is incorrect",
+    });
+  }
+
+  // 3) Check if new passwords match
+  if (newPassword !== confirmPassword) {
+    return res.status(400).json({
+      status: "error",
+      message: "New passwords do not match",
+    });
+  }
+
+  // 4) Validate new password strength
+  if (newPassword.length < 8) {
+    return res.status(400).json({
+      status: "error",
+      message: "New password must be at least 8 characters long",
+    });
+  }
+
+  // 5) Update password
+  user.password = newPassword;
+  user.passwordConfirm = confirmPassword;
+  await user.save();
+
+  // 6) Log user in with new JWT token
+  const token = signToken(user._id);
+
+  res.status(200).json({
+    status: "success",
+    message: "Password changed successfully",
+    token,
+  });
+});

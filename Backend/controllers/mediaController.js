@@ -18,11 +18,14 @@ exports.uploadAvatar = catchAsync(async (req, res, next) => {
   );
 
   // Update user's avatar URL
+  console.log('Updating user avatar with URL:', uploadResult.downloadUrl);
   const updatedUser = await User.findByIdAndUpdate(
     req.user._id,
     { avatar: uploadResult.downloadUrl },
     { new: true, runValidators: true }
   ).select('-password -otp -passwordResetToken');
+
+  console.log('Updated user avatar field:', updatedUser.avatar);
 
   res.status(200).json({
     status: 'success',
@@ -154,6 +157,28 @@ exports.getUserMedia = catchAsync(async (req, res, next) => {
       files: [],
     },
   });
+});
+
+// Test B2 configuration
+exports.testB2Config = catchAsync(async (req, res, next) => {
+  try {
+    await b2Storage.authorize();
+    
+    res.status(200).json({
+      status: 'success',
+      message: 'B2 Storage is properly configured',
+      data: {
+        bucketName: process.env.B2_BUCKET_NAME,
+        downloadUrlBase: b2Storage.downloadUrlBase,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({
+      status: 'error',
+      message: 'B2 Storage configuration error',
+      error: error.message,
+    });
+  }
 });
 
 module.exports = exports;
