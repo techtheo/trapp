@@ -18,6 +18,7 @@ import {
   StyledInputBase,
 } from "../../components/Search";
 import ChatElement from "../../components/ChatElement";
+import FriendRequestNotification from "../../components/FriendRequestNotification";
 
 const Chats = () => {
   const theme = useTheme();
@@ -53,9 +54,12 @@ const Chats = () => {
           >
             Chats
           </Typography>
-          <IconButton sx={{ p: isMobile ? 1 : 1.5 }}>
-            <CircleDashed size={isMobile ? 20 : 24} />
-          </IconButton>
+          <Stack direction="row" spacing={1}>
+            <FriendRequestNotification />
+            <IconButton sx={{ p: isMobile ? 1 : 1.5 }}>
+              <CircleDashed size={isMobile ? 20 : 24} />
+            </IconButton>
+          </Stack>
         </Stack>
         <Stack sx={{ width: "100%" }}>
           <Search>

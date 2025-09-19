@@ -36,10 +36,12 @@ const SideBar = () => {
         return 0; // Chats
       case "/group":
         return 1; // Groups
+      case "/friends":
+        return 2; // Friends
       case "/call":
-        return 2; // Call logs
+        return 3; // Call logs
       case "/settings":
-        return 3; // Settings
+        return 4; // Settings
       case "/profile":
         return null; // Profile doesn't have a sidebar icon, so no selection
       default:
@@ -94,6 +96,9 @@ const SideBar = () => {
         navigate("/group"); // Groups
         break;
       case 2:
+        navigate("/friends"); // Friends
+        break;
+      case 3:
         navigate("/call"); // Call logs
         break;
       default:
@@ -239,7 +244,7 @@ const SideBar = () => {
               p={1}
               sx={{
                 background:
-                  selected === 3
+                  selected === 4
                     ? `linear-gradient(135deg, ${alpha(
                         theme.palette.primary.main,
                         0.15
@@ -247,11 +252,11 @@ const SideBar = () => {
                     : "transparent",
                 borderRadius: 1.5,
                 border:
-                  selected === 3
+                  selected === 4
                     ? `2px solid ${alpha(theme.palette.primary.main, 0.3)}`
                     : "2px solid transparent",
                 boxShadow:
-                  selected === 3
+                  selected === 4
                     ? `0 8px 32px ${alpha(
                         theme.palette.primary.main,
                         0.15
@@ -262,7 +267,7 @@ const SideBar = () => {
                 "&:hover": {
                   transform: "translateY(-2px)",
                   boxShadow:
-                    selected === 3
+                    selected === 4
                       ? `0 12px 40px ${alpha(
                           theme.palette.primary.main,
                           0.2
@@ -274,7 +279,7 @@ const SideBar = () => {
                       ? "0 8px 24px rgba(0, 0, 0, 0.08)"
                       : "0 8px 24px rgba(0, 0, 0, 0.3)",
                   background:
-                    selected === 3
+                    selected === 4
                       ? `linear-gradient(135deg, ${alpha(
                           theme.palette.primary.main,
                           0.2
@@ -287,7 +292,7 @@ const SideBar = () => {
                       : alpha(theme.palette.background.paper, 0.8),
                 },
                 "&::before":
-                  selected === 3
+                  selected === 4
                     ? {
                         content: '""',
                         position: "absolute",
@@ -310,7 +315,7 @@ const SideBar = () => {
                 sx={{
                   width: "max-content",
                   color:
-                    selected === 3
+                    selected === 4
                       ? theme.palette.primary.main
                       : theme.palette.mode === "light"
                       ? "#000"

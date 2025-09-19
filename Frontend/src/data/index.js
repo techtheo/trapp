@@ -7,6 +7,7 @@ import {
   SignOut,
   User,
   Users,
+  UserPlus,
 } from "phosphor-react";
 
 const Profile_Menu = [
@@ -35,6 +36,10 @@ const Nav_Buttons = [
   },
   {
     index: 2,
+    icon: <UserPlus />,
+  },
+  {
+    index: 3,
     icon: <Phone />,
   },
 ];

@@ -48,6 +48,9 @@ mongoose
   
 const port = process.env.PORT || 8000;
 
+// Make io accessible to controllers
+app.set("io", io);
+
 server.listen(port, () => {
   console.log(`App running on port ${port} ...`);
 });
